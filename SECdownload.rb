@@ -48,7 +48,7 @@ def parse_all_rss(from, to)
 	company_download_info = Array.new
 
 	for year in from..to
-		for month in 1..1
+		for month in 1..12
 			company_download_info += parse_rss(year, month)
 		end
 	end
@@ -79,7 +79,7 @@ def feed_reader(feed, cik_filter)
 	filtered_feed = Array.new
 
 	feed.items.each do |item|
-		if ["10-K"].include?(item.description)
+		if ["10-K", "10-Q"].include?(item.description)
 			cik = cik_extractor(item.title)
 			if cik_filter.include?(cik[1])
 				link_zip = item.link.sub("index.htm", "xbrl.zip")
