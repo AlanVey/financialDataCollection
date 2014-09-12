@@ -3,8 +3,6 @@ require 'open-uri'
 require 'fileutils'
 require 'open-uri'
 
-#===================HELPER METHODS===================
-
 def sec_download(from, to)
 	#to = Time.now.year
 	parse_all_rss(from, to).each do |financial_stat|
@@ -49,8 +47,8 @@ def parse_rss(year, month)
 		open(edgarFilingsFeed) do |rss|
 			company_download_info = feed_reader(RSS::Parser.parse(rss), cik_filter_function)
 		end
-	rescue => e
-		print e.message
+	rescue
+		print "The RSS Feed could not beed found for the period\n"
 	end
 
   print "...Done. \n"
