@@ -4,8 +4,8 @@ require 'fileutils'
 
 #===================HELPER METHODS===================
 
-def sec_download(from, to)
-	parse_all_rss(from, to).each do |financial_stat|
+def sec_download(from)
+	parse_all_rss(from, Time.now.year).each do |financial_stat|
 		target_dir = "sec/#{financial_stat[4][4..7]}/#{financial_stat[4][0..2]}"
 		zip_file_name = target_dir[/\d{10}.{19}$/]
 	  
