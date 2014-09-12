@@ -1,19 +1,36 @@
 require 'rss'
 require 'open-uri'
 require 'fileutils'
+require 'rubygems'
+require 'zip'
 
 #===================HELPER METHODS===================
+def unzip(path) 
+	Zip::File.open(path) do |zip_file|
+  		zip_file.each do |entry|
+    	  target_dir = "sec/poop/#{entry.name}"
+    	  FileUtils::mkdir_p("sec/poop") 
+    		puts "Extracting #{entry.name}...\n"
+    		entry.extract(target_dir)
+    		puts "...Done\n"
 
-def sec_download(from)
-	parse_all_rss(from, Time.now.year).each do |financial_stat|
+    # Read into memory
+    		#content = entry.get_input_stream.read
+    	end
+  end
+end
+
+
+def sec_download(from, to)
+	parse_all_rss(from, to).each do |financial_stat|
 		target_dir = "sec/#{financial_stat[4][4..7]}/#{financial_stat[4][0..2]}"
 		zip_file_name = target_dir[/\d{10}.{19}$/]
 	  
 	  FileUtils::mkdir_p(target_dir) 
 	  
 	  exec("wget #{financial_stat[2]};")
-	  #{}"unzip #{zip_file_name} -d #{target_dir} ;" 
-	  #exec ("rm -rf __MACOSX; rm -rf #{zip_file_name} ")
+	  
+	  
 	end
 end
 
@@ -22,7 +39,7 @@ def parse_all_rss(from, to)
 	company_download_info = Array.new
 
 	for year in from..to
-		for month in 1..12
+		for month in 1..2
 			company_download_info += parse_rss(year, month)
 		end
 	end
