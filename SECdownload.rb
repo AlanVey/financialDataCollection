@@ -59,7 +59,7 @@ end
 def parse_rss(year, month)
 	month = sprintf('%02d', month)
 	edgarFilingsFeed = "http://www.sec.gov/Archives/edgar/monthly/xbrlrss-#{year.to_s}-#{month}.xml"
-	company_download_info = nil
+	company_download_info = Array.new
 
 	print edgarFilingsFeed + "...\n"
 
@@ -68,7 +68,7 @@ def parse_rss(year, month)
 			company_download_info = feed_reader(RSS::Parser.parse(rss), cik_filter_function)
 		end
 	rescue
-		print "The RSS Feed could not beed found for the period\n"
+		print "The RSS Feed could not be found for the period\n"
 	end
 
   print "...Done. \n"
