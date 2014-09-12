@@ -5,26 +5,27 @@ require 'open-uri'
 require 'rubygems'
 require 'zip'
 
-def sec_download(from, to)
-	#to = Time.now.year
-	parse_all_rss(from, to).each do |financial_stat|
-		comp_cik  	= financial_stat[1].to_s
-		comp_link 	= financial_stat[2].to_s
-		comp_period = financial_stat[3].to_s
-		target_dir 	= "sec/#{financial_stat[4][4..7]}/#{financial_stat[4][0..2]}"
-	  zip_file    = target_dir + "/#{comp_cik}.zip"
+def sec_download(from)
+	parse_all_rss(from, Time.now.year).each do |financial_stat|
+		comp_cik   = financial_stat[1].to_s
+		comp_link  = financial_stat[2].to_s
+    comp_date  = financial_stat[4].to_s
+		target_dir = "sec/#{financial_stat[4][4..7]}/#{financial_stat[4][0..2]}"
+	  zip_file   = target_dir + "/#{comp_cik}.zip"
+
 	  FileUtils::mkdir_p(target_dir) 
 
-		open(zip_file, 'wb') do |fo|
-			begin
-  			fo.print open(comp_link).read
-  		rescue
-  			print "Invalid XBRL link for: #{comp_name}, Accounts: #{comp_period} \n"
-  		end
-		end
-
-		unzip(zip_file)
+    if not File.directory?(zip_file.sub(".zip", ''))
+		  File.open(zip_file, 'wb') do |fo|
+  		  fo.write open(comp_link).read
+        unzip(zip_file)
+        FileUtils.rm(zip_file)
+      end
+    else
+      print "Files already downloaded for cik: #{comp_cik} #{comp_date}.\n"
+    end
 	end
+  print "All files have been downloaded.\n"
 end
 
 def unzip(path) 
@@ -39,7 +40,7 @@ def unzip(path)
     end
   end
 
-  puts "Unzipping #{folder} completed.\n"
+  print "Unzipping #{folder} completed.\n"
 end
 
 # Both arguments input in years
@@ -47,7 +48,7 @@ def parse_all_rss(from, to)
 	company_download_info = Array.new
 
 	for year in from..to
-		for month in 1..12
+		for month in 1..1
 			company_download_info += parse_rss(year, month)
 		end
 	end
@@ -78,7 +79,7 @@ def feed_reader(feed, cik_filter)
 	filtered_feed = Array.new
 
 	feed.items.each do |item|
-		if ["10-K", "10-Q"].include?(item.description)
+		if ["10-K"].include?(item.description)
 			cik = cik_extractor(item.title)
 			if cik_filter.include?(cik[1])
 				link_zip = item.link.sub("index.htm", "xbrl.zip")
