@@ -2,6 +2,8 @@ require 'rss'
 require 'open-uri'
 require 'fileutils'
 require 'open-uri'
+require 'rubygems'
+require 'zip'
 
 #===================HELPER METHODS===================
 
@@ -12,17 +14,34 @@ def sec_download(from, to)
 		comp_link 	= financial_stat[2].to_s
 		comp_period = financial_stat[3].to_s
 		target_dir 	= "sec/#{financial_stat[4][4..7]}/#{financial_stat[4][0..2]}"
-	  
+	  zip_file    = target_dir + "/#{comp_cik}.zip"
 	  FileUtils::mkdir_p(target_dir) 
 
-		open(target_dir + "/#{comp_cik}.zip", 'wb') do |fo|
+		open(zip_file, 'wb') do |fo|
 			begin
   			fo.print open(comp_link).read
   		rescue
   			print "Invalid XBRL link for: #{comp_name}, Accounts: #{comp_period} \n"
   		end
 		end
+
+		unzip(zip_file)
 	end
+end
+
+def unzip(path) 
+	folder = path.sub(".zip", '')
+  FileUtils::mkdir_p(folder)
+	Zip::File.open(path) do |zip_file|
+  	zip_file.each do |entry|
+  		target_dir = folder + "/#{entry.name}"
+    	entry.extract(target_dir)
+
+    	content = entry.get_input_stream.read
+    end
+  end
+
+  puts "Unzipping #{folder} completed.\n"
 end
 
 # Both arguments input in years
