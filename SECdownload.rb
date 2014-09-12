@@ -1,19 +1,27 @@
 require 'rss'
 require 'open-uri'
 require 'fileutils'
+require 'open-uri'
 
 #===================HELPER METHODS===================
 
-def sec_download(from)
-	parse_all_rss(from, Time.now.year).each do |financial_stat|
-		target_dir = "sec/#{financial_stat[4][4..7]}/#{financial_stat[4][0..2]}"
-		zip_file_name = target_dir[/\d{10}.{19}$/]
+def sec_download(from, to)
+	#to = Time.now.year
+	parse_all_rss(from, to).each do |financial_stat|
+		comp_cik  	= financial_stat[1].to_s
+		comp_link 	= financial_stat[2].to_s
+		comp_period = financial_stat[3].to_s
+		target_dir 	= "sec/#{financial_stat[4][4..7]}/#{financial_stat[4][0..2]}"
 	  
 	  FileUtils::mkdir_p(target_dir) 
-	  
-	  exec("wget #{financial_stat[2]};")
-	  #{}"unzip #{zip_file_name} -d #{target_dir} ;" 
-	  #exec ("rm -rf __MACOSX; rm -rf #{zip_file_name} ")
+
+		open(target_dir + "/#{comp_cik}.zip", 'wb') do |fo|
+			begin
+  			fo.print open(comp_link).read
+  		rescue
+  			print "Invalid XBRL link for: #{comp_name}, Accounts: #{comp_period} \n"
+  		end
+		end
 	end
 end
 
