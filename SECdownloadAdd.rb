@@ -31,7 +31,7 @@ def sec_download_add(from)
       print "Files already downloaded for cik: #{comp_cik} #{comp_year} #{comp_month} .\n"
     end
 
-    print "...Done\n"
+    print "...done\n"
 
   end
   print "All files have been downloaded.\n"
@@ -41,7 +41,7 @@ def companies_xbrl_files(from)
   file_paths = Array.new
 
   for year in from..Time.now.year
-    for month in 1..1
+    for month in 1..12
       file_paths += companies_xbrl_files_monthly(year, month)
     end
   end
