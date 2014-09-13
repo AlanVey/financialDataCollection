@@ -6,7 +6,7 @@ def companies_xbrl_files(from)
   file_paths = Array.new
 
   for year in from..Time.now.year
-    for month in 7..7
+    for month in 1..12
       file_paths += companies_xbrl_files_monthly(year, month)
     end
   end
@@ -20,9 +20,13 @@ def companies_xbrl_files_monthly(year, month)
   file_paths  = Array.new
   xbrlFilings = retrieve_by_cik(retrieve_by_form_type(sec_url))
 
+  if xbrlFilings == nil
+    return Array.new
+  end
+
   xbrlFilings.each do |xbrlFiling|
     cik       = xbrlFiling.children[7].text
-    xbrlFiles = xbrlFiling.children[23].children
+    xbrlFiles = xbrlFiling.children[23] != nil ? xbrlFiling.children[23].children : xbrlFiling.children[21].children
     file_path = Array.new
 
     (1..(xbrlFiles.length - 1)).step(2) do |j|
@@ -34,10 +38,15 @@ def companies_xbrl_files_monthly(year, month)
     end
     file_paths << [cik, file_path]
   end
+
   file_paths
 end
 
 def retrieve_by_cik(filtered_items)
+  if filtered_items == nil
+    return nil
+  end
+
   cik_list             = cik_filter_function
   filtered_xbrlFilings = Array.new
 
@@ -53,6 +62,11 @@ end
 
 def retrieve_by_form_type(url)
   feed           = open_feed(url)
+
+  if feed == nil
+    return nil
+  end
+
   items          = feed.xpath('//item')
   filtered_items = Array.new
 
@@ -66,9 +80,17 @@ end
 def open_feed(url)
   feed = nil
 
-  open(url) do |rss|
-    feed = Nokogiri::XML(rss)
+  print url + "...\n"
+
+  begin
+    open(url) do |rss|
+      feed = Nokogiri::XML(rss)
+    end
+  rescue
+    print "The RSS Feed could not be found for the period\n"
   end
+
+  print "...done\n"
 
   feed
 end
