@@ -2,8 +2,16 @@ require 'nokogiri'
 require 'open-uri'
 require_relative 'SECdownload.rb'
 
-def companies_xbrl_files
+def companies_xbrl_files(from)
+  file_paths = Array.new
 
+  for year in from..Time.now.year
+    for month in 7..7
+      file_paths += companies_xbrl_files_monthly(year, month)
+    end
+  end
+
+  file_paths
 end
 
 def companies_xbrl_files_monthly(year, month)
@@ -13,7 +21,7 @@ def companies_xbrl_files_monthly(year, month)
   xbrlFilings = retrieve_by_cik(retrieve_by_form_type(sec_url))
 
   xbrlFilings.each do |xbrlFiling|
-    cik       = xbrlFiling.children[7].children.text
+    cik       = xbrlFiling.children[7].text
     xbrlFiles = xbrlFiling.children[23].children
     file_path = Array.new
 
