@@ -17,8 +17,12 @@ def sec_download(from)
 
     if not File.directory?(zip_file.sub(".zip", ''))
 		  File.open(zip_file, 'wb') do |fo|
-  		  fo.write open(comp_link).read
-        unzip(zip_file)
+        begin
+  		    fo.write open(comp_link).read
+          unzip(zip_file)
+        rescue
+          print "The SEC Does not have the file (404): #{comp_cik}\n"
+        end
         FileUtils.rm(zip_file)
       end
     else
@@ -79,7 +83,7 @@ def feed_reader(feed, cik_filter)
 	filtered_feed = Array.new
 
 	feed.items.each do |item|
-		if ["10-K", "10-Q"].include?(item.description)
+		if item.description =~ /.(xml|xsd)$/
 			cik = cik_extractor(item.title)
 			if cik_filter.include?(cik[1])
 				link_zip = item.link.sub("index.htm", "xbrl.zip")

@@ -2,17 +2,57 @@ require 'nokogiri'
 require 'open-uri'
 require_relative 'SECdownload.rb'
 
-def retrieve_by_cik(year, month)
-  month = sprintf('%02d', month)
-  cik_list = cik_filter_function
-  cik_items = Array.new
-  feed = open_feed("http://www.sec.gov/Archives/edgar/monthly/xbrlrss-#{year}-#{month}.xml")
+def companies_xbrl_files
 
-  feed.xpath('//item/edgar:xbrlFiling','edgar' => 'http://www.sec.gov/Archives/edgar').each do |item|
-    cik_items << item if cik_list.include?(item.children[7].children.text)
+end
+
+def companies_xbrl_files_monthly(year, month)
+  month       = sprintf('%02d', month)
+  sec_url     = "http://www.sec.gov/Archives/edgar/monthly/xbrlrss-#{year}-#{month}.xml"
+  file_paths  = Array.new
+  xbrlFilings = retrieve_by_cik(retrieve_by_form_type(sec_url))
+
+  xbrlFilings.each do |xbrlFiling|
+    cik       = xbrlFiling.children[7].children.text
+    xbrlFiles = xbrlFiling.children[23].children
+    file_path = Array.new
+
+    (1..(xbrlFiles.length - 1)).step(2) do |j|
+      url  = xbrlFiles[j].attributes["url"].value
+
+      if (url =~ /.(xml|xsd)$/) != nil
+        file_path << url
+      end 
+    end
+    file_paths << [cik, file_path]
+  end
+  file_paths
+end
+
+def retrieve_by_cik(filtered_items)
+  cik_list             = cik_filter_function
+  filtered_xbrlFilings = Array.new
+
+  filtered_items.each do |item|
+    xbrlFiling = item.children[13] != nil ? item.children[13] : item.children[9]
+    cik        = xbrlFiling.children[7].children.text
+    
+    filtered_xbrlFilings << xbrlFiling if cik_list.include?(cik)
   end
 
-  cik_items
+  filtered_xbrlFilings
+end
+
+def retrieve_by_form_type(url)
+  feed           = open_feed(url)
+  items          = feed.xpath('//item')
+  filtered_items = Array.new
+
+  items.each do |item|
+    filtered_items << item if item.children[9].children.text =~ /(10-K|10-Q)/
+  end
+
+  filtered_items
 end
 
 def open_feed(url)
@@ -23,23 +63,4 @@ def open_feed(url)
   end
 
   feed
-end
-
-
-def retrieve_company_xbrl_files(feed)
-  xml_struct = '//item/edgar:xbrlFiling/edgar:xbrlFiles/edgar:xbrlFile'
-  edgar_path = 'http://www.sec.gov/Archives/edgar'
-
-  file_paths = Array.new
-
-  feed.xpath(xml_struct, 'edgar' => edgar_path).each do |i|
-    type = i.attributes["type"].value
-    url  = i.attributes["url"].value
-
-    if ["10-K", "10-Q"].include?(type) and (url =~ /.(xml|xsd)$/) != nil
-      file_paths << url
-    end 
-  end
-
-  file_paths
 end
