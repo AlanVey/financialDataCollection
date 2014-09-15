@@ -1,7 +1,6 @@
 require 'rss'
 require 'open-uri'
 require 'fileutils'
-require 'open-uri'
 require 'rubygems'
 require 'zip'
 
