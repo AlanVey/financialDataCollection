@@ -176,6 +176,7 @@ def cash_conversion_cycle(start_inventory, end_inventory,
   end_accounts_payable, cogs, net_sales)
 end
 
+#------------------------------------------------------------------------------
 def gross_profit_margin(gross_profit, revenue)
 end
 
@@ -195,13 +196,47 @@ def return_on_capital_employed(ebit, start_debt_liabilities, end_debt_liabilitie
   start_shareholders_equity, end_shareholders_equity)
 end
 
+#------------------------------------------------------------------------------
 def debt_to_equity_ratio(long_term_debt, equity)
 end
 
 def free_cash_flow_to_debt(free_cash_flow, total_debt)
 end
 
-def fixed_asset_turnover()
+#------------------------------------------------------------------------------
+def fixed_asset_turnover(revenue, property_plant_equipment)
 end
 
+def revenue_per_employee(revenue, num_employees)
+end
 
+#------------------------------------------------------------------------------
+def ocf_to_sales(ocf, revenue)
+end
+
+def fcf_to_ocf(fcf, ocf)
+end
+
+def capex_coverage(ocf, capital_expenditure)
+end
+
+#------------------------------------------------------------------------------
+def price_to_book_ratio(price, equity)
+  price.to_f/equity
+end
+
+def peg(price, eps, eps_growth)
+  price.to_f/ebitda/eps_growth.to_f
+end
+
+def price_to_ocf(price, ocf)
+  price.to_f/ocf
+end
+
+def price_to_sales(price, sales)
+  price.to_f/sales
+end
+
+def price_to_ebitda(price, ebitda)
+  price.to_f/ebitda
+end
