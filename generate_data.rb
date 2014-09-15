@@ -4,8 +4,8 @@ require 'xbrlware-ruby19'
 # Level 1 =====================================================================
 def generate_data(from)
   processed_data = process_data(from)
-  generate_competitor_ratios(processed_data, from)
-  generate_historical_ratios(processed_data, from)
+  generate_competitor_ratios(processed_data)
+  generate_historical_ratios(processed_data)
 end
 
 # Level 2 =====================================================================
@@ -13,29 +13,60 @@ def process_data(from)
   all_company_data = Array.new
 
   get_ciks.each do |cik|
-    all_company_data << process_company_data(cik, from)
+    all_company_data << [cik, process_company_data(cik, from)]
   end
 
   all_company_data
 end
 
-def generate_competitor_ratios(processed_data, from)
-  # TODO
+def generate_competitor_ratios(processed_data)
+  current_year = processed_data[0][1].length - 1
+
+  (0..current_year).each do |year|
+    File.open("#{year}.csv", 'w') do |file|
+      file.write "CIK, Ratio1, Ratio2, ... , \n"
+
+      processed_data.each do |company|
+        file.write "#{company[0]}" 
+        company[1][year - from_year][2].each do |ratio_group|
+          ratio_group.each do |ratio|
+            file.write ",#{ratio}"
+          end
+        end
+      end
+      file.write "\n"
+      file.close
+    end
+  end
 end
 
-def generate_historical_ratios(processed_data, from)
-  # TODO
+def generate_historical_ratios(processed_data)
+  processed_data.each do |company|
+    File.open("#{company[0]}.csv", 'w') do |file|
+      file.write "Year, Ratio1, Ratio2, ... , \n"
+      company[1].each do |year|
+        file.write "#{year},"
+        year[2].each do |ratio_group|
+          ratio_group.each do |ratio|
+            file.write ",#{ratio}"
+          end
+        end
+      end
+      file.write "\n"
+      file.close
+    end
+  end
 end
 
 # Level 3 =====================================================================
 def process_company_data(cik, from)
-  company_data = Array.new
+  annual_data = Array.new
 
   for year in from..Time.now.year
-     company_data << [cik, process_company_annual_data(cik, year)]
+     annual_data << process_company_annual_data(cik, year)
   end
 
-  company_data
+  annual_data
 end
 
 def get_ciks
@@ -52,8 +83,8 @@ end
 
 # Level 4 =====================================================================
 def process_company_annual_data(cik, year)
-  jan = 1
-  dec = 12
+  jan         = 1
+  dec         = 12
 
   jan..dec.each do |month|
     month     = month_convert(sprintf('%02d', month))
