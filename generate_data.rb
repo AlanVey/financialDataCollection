@@ -1,6 +1,10 @@
+require 'rubygems'
+require 'xbrlware-ruby19'
+
+
+# Level 1 =====================================================================
 def generate_data
 end
-
 
 # Level 2 =====================================================================
 def process_data
@@ -29,7 +33,17 @@ end
 
 # Level 6 =====================================================================
 def extract_data(path)
+	data = Xbrlware.ins(path)
+	all_figures = data.item_all_map 
+
+	all_figures.each do |figure_name, items| 
+		if figure_name =~ /TEXTBLOCK/
+			all_figures.delete("#{figure_name}")
+ 		end
+ 	end
+ 	all_figures
 end
+
 
 def liquidity_ratios(extracted_data)
 end
@@ -49,6 +63,6 @@ end
 def valuation_ratios(extracted_data)
 end
 
-# Level 6 =====================================================================
+# Level 7 =====================================================================
 # All individual ratio calculation
 
