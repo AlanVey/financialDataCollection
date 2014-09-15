@@ -173,6 +173,10 @@ end
 def cash_flow_ratios(data)
   cash_flow_data = Array.new
 
+  cash_flow_data << ocf_to_sales(nil, nil)
+  cash_flow_data << fcf_to_ocf(nil, nil)
+  cash_flow_data << capex_coverage(nil, nil)
+
   cash_flow_data
 end
 
