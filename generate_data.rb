@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
+require 'nokogiri'
 
 # Level 1 =====================================================================
 def generate_data(from)
@@ -118,15 +119,25 @@ end
 def extract_data(path)
 	data = Xbrlware.ins(path)
 	all_figures = data.item_all_map 
+	extracted_data = {}
+	figures_needed = []
 
 	all_figures.each do |figure_name, items| 
-		if figure_name =~ /TEXTBLOCK/
-			all_figures.delete("#{figure_name}")
- 		end
- 	end
- 	all_figures
-end
+		if figures_needed.include?(figure_name)
+			extracted_data["#{figure_name}"] = nil 
+		end
 
+		values = Array.new
+
+		items.each do |item|
+ 			if item.context.id.match("YTD")
+ 				values << [item.context.id, item.value] 
+ 			end
+ 		end
+ 		extracted_data["#{figure_name}"] = values
+ 	end
+ 	extracted_data
+end
 
 def liquidity_ratios(data)
   liquidity_data = Array.new
