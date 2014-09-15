@@ -128,37 +128,80 @@ def extract_data(path)
 end
 
 
-def liquidity_ratios(extracted_data)
-  # TODO
-  return nil
+def liquidity_ratios(data)
+  liquidity_data = Array.new
+
+  liquidity_data << current_ratio(nil, nil)
+  liquidity_data << cash_conversion_cycle(nil, nil)
+
+  liquidity_data
 end
 
-def debt_ratios(extracted_data)
-  # TODO
-  return nil
+def debt_ratios(data)
+  debt_data = Array.new
+
+  debt_data
 end
 
-def profitability_ratios(extracted_data)
-  # TODO
-  return nil
+def profitability_ratios(data)
+  profitability_data = Array.new
+
+  profitability_data
 end
 
-def cash_flow_ratios(extracted_data)
-  # TODO
-  return nil
+def cash_flow_ratios(data)
+  cash_flow_data = Array.new
+
+  cash_flow_data
 end
 
-def operating_performance_ratios(extracted_data)
-  # TODO
-  return nil
+def operating_performance_ratios(data)
+  operating_performance_data = Array.new
+
+  operating_performance_data
 end
 
-def valuation_ratios(extracted_data)
-  # TODO
-  return nil
+def valuation_ratios(data)
+  valuation_data = Array.new
+
+  valuation_data
 end
 
 # Level 7 =====================================================================
-# All individual ratio calculation
-# TODO
+def current_ratio(current_assets, current_liabilities)
+end
+
+def cash_conversion_cycle(start_inventory, end_inventory, 
+  start_accounts_receivable, end_accounts_receivable, start_accounts_payable, 
+  end_accounts_payable, cogs, net_sales)
+end
+
+def gross_profit_margin(gross_profit, revenue)
+end
+
+def operating_profit_margin(operating_profit, revenue)
+end
+
+def net_profit_margin(net_profit, revenue)
+end
+
+def effective_tax_rate(income_tax_expense, pre_tax_income)
+end
+
+def return_on_assets(net_income, start_total_assets, end_total_assets)
+end
+
+def return_on_capital_employed(ebit, start_debt_liabilities, end_debt_liabilities,
+  start_shareholders_equity, end_shareholders_equity)
+end
+
+def debt_to_equity_ratio(long_term_debt, equity)
+end
+
+def free_cash_flow_to_debt(free_cash_flow, total_debt)
+end
+
+def fixed_asset_turnover()
+end
+
 
