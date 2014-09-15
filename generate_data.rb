@@ -1,7 +1,7 @@
 def generate_data(from)
   processed_data = process_data(from)
-  generate_competitor_ratios(processed_data)
-  generate_historical_ratios(processed_data)
+  generate_competitor_ratios(processed_data, from)
+  generate_historical_ratios(processed_data, from)
 end
 
 
@@ -16,11 +16,11 @@ def process_data(from)
   all_company_data
 end
 
-def generate_competitor_ratios(processed_data)
+def generate_competitor_ratios(processed_data, from)
   # TODO
 end
 
-def generate_historical_ratios(processed_data)
+def generate_historical_ratios(processed_data, from)
   # TODO
 end
 
