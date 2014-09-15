@@ -140,11 +140,21 @@ end
 def debt_ratios(data)
   debt_data = Array.new
 
+  debt_data << debt_to_equity_ratio(nil, nil)
+  debt_data << free_cash_flow_to_debt(nil, nil)
+
   debt_data
 end
 
 def profitability_ratios(data)
   profitability_data = Array.new
+
+  profitability_data << gross_profit_margin(nil, nil)
+  profitability_data << operating_profit_margin(nil, nil)
+  profitability_data << net_profit_margin(nil, nil)
+  profitability_data << effective_tax_rate(nil, nil)
+  profitability_data << return_on_assets(nil, nil, nil)
+  profitability_data << return_on_capital_employed(nil, nil, nil, nil, nil)
 
   profitability_data
 end
@@ -158,17 +168,28 @@ end
 def operating_performance_ratios(data)
   operating_performance_data = Array.new
 
+  operating_performance_data << ocf_to_sales(nil, nil)
+  operating_performance_data << fcf_to_ocf(nil, nil)
+  operating_performance_data << capex_coverage(nil, nil)
+
   operating_performance_data
 end
 
 def valuation_ratios(data)
   valuation_data = Array.new
 
+  valuation_data << price_to_book_ratio(nil, nil)
+  valuation_data << peg(nil, nil, nil)
+  valuation_data << price_to_ocf(nil, nil)
+  valuation_data << price_to_sales(nil, nil)
+  valuation_data << price_to_ebitda(nil, nil)
+
   valuation_data
 end
 
 # Level 7 =====================================================================
 def current_ratio(current_assets, current_liabilities)
+  current_assets.to_f/current_liabilities
 end
 
 def cash_conversion_cycle(start_inventory, end_inventory, 
@@ -178,46 +199,60 @@ end
 
 #------------------------------------------------------------------------------
 def gross_profit_margin(gross_profit, revenue)
+  gross_profit.to_f/revenue
 end
 
 def operating_profit_margin(operating_profit, revenue)
+  operating_profit.to_f/revenue
 end
 
 def net_profit_margin(net_profit, revenue)
+  net_profit.to_f/revenue
 end
 
 def effective_tax_rate(income_tax_expense, pre_tax_income)
+  income_tax_expense.to_f/pre_tax_income
 end
 
 def return_on_assets(net_income, start_total_assets, end_total_assets)
+  net_income.to_f/((start_total_assets.to_f + end_total_assets.to_f)/2.0)
 end
 
 def return_on_capital_employed(ebit, start_debt_liabilities, end_debt_liabilities,
   start_shareholders_equity, end_shareholders_equity)
+  ebit.to_f/(((start_debt_liabilities + end_debt_liabilities)/2.0) + 
+             ((start_shareholders_equity + end_shareholders_equity))/2.0)
 end
 
 #------------------------------------------------------------------------------
 def debt_to_equity_ratio(long_term_debt, equity)
+  long_term_debt.to_f/equity
 end
 
 def free_cash_flow_to_debt(free_cash_flow, total_debt)
+  free_cash_flow.to_f/total_debt
 end
 
 #------------------------------------------------------------------------------
 def fixed_asset_turnover(revenue, property_plant_equipment)
+  revenue.to_f/property_plant_equipment
 end
 
 def revenue_per_employee(revenue, num_employees)
+  revenue.to_f/num_employees
 end
 
 #------------------------------------------------------------------------------
 def ocf_to_sales(ocf, revenue)
+  ocf.to_f/revenue
 end
 
 def fcf_to_ocf(fcf, ocf)
+  fcf.to_f/ocf
 end
 
 def capex_coverage(ocf, capital_expenditure)
+  ocf.to_f/capital_expenditure
 end
 
 #------------------------------------------------------------------------------
