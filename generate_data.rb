@@ -158,12 +158,12 @@ end
 def profitability_ratios(data)
   profitability_data = Array.new
 
-  profitability_data << gross_profit_margin(nil, nil)
-  profitability_data << operating_profit_margin(nil, nil)
-  profitability_data << net_profit_margin(nil, nil)
-  profitability_data << effective_tax_rate(nil, nil)
-  profitability_data << return_on_assets(nil, nil, nil)
-  profitability_data << return_on_capital_employed(nil, nil, nil, nil, nil)
+  profitability_data << gross_profit_margin(data["GROSSPROFIT"], data["SALESREVENUENET"])
+  profitability_data << operating_profit_margin(data["OPERATINGINCOMELOSS"], data["SALESREVENUENET"])
+  profitability_data << net_profit_margin(data["NETINCOMELOSS"], data["SALESREVENUENET"])
+  #profitability_data << effective_tax_rate(data["INCOMETAXEXPENSEBENEFIT"], data["SALESREVENUENET"])
+  #profitability_data << return_on_assets(nil, nil, nil)
+  #profitability_data << return_on_capital_employed(nil, nil, nil, nil, nil)
 
   profitability_data
 end
