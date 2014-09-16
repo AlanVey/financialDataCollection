@@ -167,9 +167,14 @@ end
 def profitability_ratios(data)
   profitability_data = Array.new
 
-  profitability_data << gross_profit_margin(2, 1)
-  #profitability_data << operating_profit_margin(data["OPERATINGINCOMELOSS"], data["SALESREVENUENET"])
-  #profitability_data << net_profit_margin(data["NETINCOMELOSS"], data["SALESREVENUENET"])
+  revenue = current_and_previous(data["SALESREVENUENET"][0])
+  gross_profit = current_and_previous(data["GROSSPROFIT"][0])
+  operating_profit = current_and_previous(data["OPERATINGINCOMELOSS"][0])
+  net_profit = current_and_previous(data["NETINCOMELOSS"])
+  
+  profitability_data << gross_profit_margin(gross_profit, revenue)
+  profitability_data << operating_profit_margin(operating_profit, revenue)
+  profitability_data << net_profit_margin(net_profit, revenue)
   #profitability_data << effective_tax_rate(data["INCOMETAXEXPENSEBENEFIT"], data["SALESREVENUENET"])
   #profitability_data << return_on_assets(nil, nil, nil)
   #profitability_data << return_on_capital_employed(nil, nil, nil, nil, nil)
@@ -313,4 +318,14 @@ def month_convert(month)
             '09' => "Sep", '10' => "Oct", '11' => "Nov", '12' => "Dec"}
 
   months[month]
+end
+
+def current_and_previous(figures)
+	current = [0,0]
+	previous = [0,0]
+	for i in 0..(figures.length-1)
+		current = [figures[i][0].to_i, i] if current[0] < figures[i][0].to_i
+		previous = [figures[i][0].to_i, i] if previous[0] < ( figures[i][0].to_i - 1 )
+	end
+	[figures[current[1]][1], figures[previous[1]][1]]
 end
