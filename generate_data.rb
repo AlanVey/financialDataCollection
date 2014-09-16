@@ -295,3 +295,13 @@ end
 def price_to_ebitda(price, ebitda)
   price.to_f/ebitda
 end
+
+def current_and_previous(figures)
+	current = [0,0]
+	previous = [0,0]
+	for i in 0..(figures.length-1)
+		current = [figures[i][0].to_i, i] if current[0] < figures[i][0].to_i
+		previous = [figures[i][0].to_i, i] if previous[0] < ( figures[i][0].to_i - 1 )
+	end
+	[figures[current[1]][1], figures[previous[1]][1]]
+end
