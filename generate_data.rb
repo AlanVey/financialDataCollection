@@ -120,7 +120,9 @@ def extract_data(path)
 	data = Xbrlware.ins(path)
 	all_figures = data.item_all_map 
 	extracted_data = {}
-	figures_needed = []
+	figures_needed = ["ASSETSCURRENT", "LIABILITIESCURRENT", "INVENTORYNET", "ACCOUNTSRECEIVABLENETCURRENT",
+										"ACCOUNTSPAYABLECURRENT", "COSTOFGOODSSOLD", "SALESREVENUENET", "GROSSPROFIT", "ASSETS",
+									  "OPERATINGINCOMELOSS", "INCOMETAXEXPENSEBENEFIT", ]
 
 	all_figures.each do |figure_name, items| 
 		if figures_needed.include?(figure_name)
@@ -130,7 +132,7 @@ def extract_data(path)
 		values = Array.new
 
 		items.each do |item|
- 			if item.context.id.match("YTD")
+ 			if item.context.id.match("/(Q4|YTD)/")
  				values << [item.context.id, item.value] 
  			end
  		end
