@@ -112,33 +112,29 @@ def calculate_ratios(path)
 end
 
 def file_is_10_K?(path)
-  # TODO
+	Xbrlware.ins(path).item_all_map["DOCUMENTTYPE"].first.value == "10-K"
 end
 
 # Level 6 =====================================================================
 def extract_data(path)
-	data = Xbrlware.ins(path)
-	all_figures = data.item_all_map 
+	data = Xbrlware.ins(path).item_all_map
 	extracted_data = {}
 	figures_needed = ["ASSETSCURRENT", "LIABILITIESCURRENT", "INVENTORYNET", "ACCOUNTSRECEIVABLENETCURRENT",
 										"ACCOUNTSPAYABLECURRENT", "COSTOFGOODSSOLD", "SALESREVENUENET", "GROSSPROFIT", "ASSETS",
-									  "OPERATINGINCOMELOSS", "INCOMETAXEXPENSEBENEFIT", ]
+									  "OPERATINGINCOMELOSS", "INCOMETAXEXPENSEBENEFIT", "NETINCOMELOSS", "STOCKHOLDERSEQUITY",
+									 	"LONGTERMDEBT", "DEBTCURRENT", "PROPERTYPLANTANDEQUIPMENTNET", "DEPRECIATIONANDAMORTIZATION", 
+									 	"NETCASHPROVIDEDBYUSEDINOPERATINGACTIVITIES", "PAYMENTSTOACQUIREPROPERTYPLANTANDEQUIPMENT"]
 
-	all_figures.each do |figure_name, items| 
-		if figures_needed.include?(figure_name)
-			extracted_data["#{figure_name}"] = nil 
-		end
-
+	figures_needed.each do |figure|
+		items = data["#{figure}"]
 		values = Array.new
+		if items != nil
+			items.each { |item| values << [item.context.id[/\d{4}/], item.value] if item.context.id !~ /QTD/ }
+			extracted_data.store("#{figure}", values)
+		end
+	end
 
-		items.each do |item|
- 			if item.context.id.match("/(Q4|YTD)/")
- 				values << [item.context.id, item.value] 
- 			end
- 		end
- 		extracted_data["#{figure_name}"] = values
- 	end
- 	extracted_data
+	extracted_data
 end
 
 def liquidity_ratios(data)
