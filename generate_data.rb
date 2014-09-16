@@ -242,10 +242,8 @@ def return_on_assets(net_income, start_total_assets, end_total_assets)
   net_income.to_f/((start_total_assets.to_f + end_total_assets.to_f)/2.0)
 end
 
-def return_on_capital_employed(ebit, start_debt_liabilities, end_debt_liabilities,
-  start_shareholders_equity, end_shareholders_equity)
-  ebit.to_f/(((start_debt_liabilities + end_debt_liabilities)/2.0) + 
-             ((start_shareholders_equity + end_shareholders_equity))/2.0)
+def return_on_capital_employed(ebit, total_assets, current_liabilities)
+  ebit.to_f/(total-assets.to_f - current_liabilities)
 end
 
 #------------------------------------------------------------------------------
