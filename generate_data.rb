@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
-require 'nokogiri'
 
 # Level 1 =====================================================================
 def generate_data(from)
   processed_data = process_data(from)
+  print processed_data
   generate_competitor_ratios(processed_data)
   generate_historical_ratios(processed_data)
 end
@@ -28,14 +28,16 @@ def generate_competitor_ratios(processed_data)
       file.write "CIK, GP, OP, NP\n"
 
       processed_data.each do |company|
-        file.write "#{company[0]}" 
-        company[1][year - from_year][2].each do |ratio_group|
-          ratio_group.each do |ratio|
-            file.write ",#{ratio}"
+        if company[1][year][2].class.to_s == "Array"
+          file.write "#{company[0]}" 
+          company[1][year][2].each do |ratio_group|
+            ratio_group.each do |ratio|
+              file.write ",#{ratio}"
+            end
           end
+          file.write "\n"
         end
       end
-      file.write "\n"
       file.close
     end
   end
@@ -43,18 +45,20 @@ end
 
 def generate_historical_ratios(processed_data)
   processed_data.each do |company|
-    File.open("sec/#{company[0]}.csv", 'w') do |file|
-      file.write "Year, GP, OP, NP\n"
-      company[1].each do |year|
-        file.write "#{year},"
-        year[2].each do |ratio_group|
-          ratio_group.each do |ratio|
-            file.write ",#{ratio}"
+    company[1].each do |year|
+      if year[2].class.to_s == "Array"
+        File.open("sec/#{company[0]}.csv", 'w') do |file|
+          file.write "Year, GP, OP, NP\n"
+          file.write "#{year[0]},"
+          year[2].each do |ratio_group|
+            ratio_group.each do |ratio|
+              file.write ",#{ratio}"
+            end
           end
+          file.write "\n"
+          file.close
         end
       end
-      file.write "\n"
-      file.close
     end
   end
 end
@@ -63,7 +67,7 @@ end
 def process_company_data(cik, from)
   annual_data = Array.new
 
-  for year in from..Time.now.year
+  (2010..2010).each do |year|
      annual_data << process_company_annual_data(cik, year)
   end
 
@@ -75,7 +79,7 @@ def get_ciks
   file = File.open('my_ciks.txt', 'r') 
 
   file.each do |line|
-    ciks << line
+    ciks << line[/\d+/]
   end
 
   file.close
@@ -85,15 +89,20 @@ end
 # Level 4 =====================================================================
 def process_company_annual_data(cik, year)
   jan         = 1
-  dec         = 12
+  dec         = 1
 
-  jan..dec.each do |month|
+  (jan..dec).each do |month|
     month     = month_convert(sprintf('%02d', month))
-    data_path = "sec/#{year}/{month}/#{cik}"
-    if File.directory?(data_path) and file_is_10_K?(data_path)
+    data_path = "sec/#{year}/#{month}/#{cik}/"
+    Dir[data_path + '*'].each do |file|
+      data_path = file if file =~ /\d+[^_].xml$/
+    end
+    
+    if data_path =~ /.xml$/ and File.exist?(data_path) and file_is_10_K?(data_path)
       return [year, month, calculate_ratios(data_path)]
     end
   end
+  return [year, nil, "SEC has no data for this"]
 end
 
 # Level 5 =====================================================================
@@ -158,9 +167,9 @@ end
 def profitability_ratios(data)
   profitability_data = Array.new
 
-  profitability_data << gross_profit_margin(data["GROSSPROFIT"], data["SALESREVENUENET"])
-  profitability_data << operating_profit_margin(data["OPERATINGINCOMELOSS"], data["SALESREVENUENET"])
-  profitability_data << net_profit_margin(data["NETINCOMELOSS"], data["SALESREVENUENET"])
+  profitability_data << gross_profit_margin(2, 1)
+  #profitability_data << operating_profit_margin(data["OPERATINGINCOMELOSS"], data["SALESREVENUENET"])
+  #profitability_data << net_profit_margin(data["NETINCOMELOSS"], data["SALESREVENUENET"])
   #profitability_data << effective_tax_rate(data["INCOMETAXEXPENSEBENEFIT"], data["SALESREVENUENET"])
   #profitability_data << return_on_assets(nil, nil, nil)
   #profitability_data << return_on_capital_employed(nil, nil, nil, nil, nil)
@@ -294,4 +303,14 @@ end
 
 def price_to_ebitda(price, ebitda)
   price.to_f/ebitda
+end
+
+# Util Methods =================================================================
+
+def month_convert(month)
+  months = {'01' => "Jan", '02' => "Feb", '03' => "Mar", '04' => "Apr", 
+            '05' => "May", '06' => "Jun", '07' => "Jul", '08' => "Aug", 
+            '09' => "Sep", '10' => "Oct", '11' => "Nov", '12' => "Dec"}
+
+  months[month]
 end
