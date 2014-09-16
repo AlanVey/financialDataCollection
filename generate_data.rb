@@ -24,8 +24,8 @@ def generate_competitor_ratios(processed_data)
   current_year = processed_data[0][1].length - 1
 
   (0..current_year).each do |year|
-    File.open("#{year}.csv", 'w') do |file|
-      file.write "CIK, Ratio1, Ratio2, ... , \n"
+    File.open("sec/#{year}.csv", 'w') do |file|
+      file.write "CIK, GP, OP, NP\n"
 
       processed_data.each do |company|
         file.write "#{company[0]}" 
@@ -43,8 +43,8 @@ end
 
 def generate_historical_ratios(processed_data)
   processed_data.each do |company|
-    File.open("#{company[0]}.csv", 'w') do |file|
-      file.write "Year, Ratio1, Ratio2, ... , \n"
+    File.open("sec/#{company[0]}.csv", 'w') do |file|
+      file.write "Year, GP, OP, NP\n"
       company[1].each do |year|
         file.write "#{year},"
         year[2].each do |ratio_group|
@@ -101,12 +101,12 @@ def calculate_ratios(path)
   calculated_ratios = Array.new
   extracted_data    = extract_data(path)
 
-  calculated_ratios << liquidity_ratios(extracted_data)
-  calculated_ratios << debt_ratios(extracted_data)
+  #calculated_ratios << liquidity_ratios(extracted_data)
+  #calculated_ratios << debt_ratios(extracted_data)
   calculated_ratios << profitability_ratios(extracted_data)
-  calculated_ratios << cash_flow_ratios(extracted_data)
-  calculated_ratios << operating_performance_ratios(extracted_data)
-  calculated_ratios << valuation_ratios(extracted_data)
+  #calculated_ratios << cash_flow_ratios(extracted_data)
+  #calculated_ratios << operating_performance_ratios(extracted_data)
+  #calculated_ratios << valuation_ratios(extracted_data)
 
   calculated_ratios
 end
