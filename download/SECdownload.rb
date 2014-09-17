@@ -19,7 +19,8 @@ def sec_download(from)
         begin
   		    fo.write open(comp_link).read
           unzip(zip_file)
-        rescue
+        rescue Exception => e
+          puts e.message
           print "The SEC Does not have the file (404): #{comp_cik}\n"
         end
         FileUtils.rm(zip_file)
@@ -39,7 +40,7 @@ def unzip(path)
   		target_dir = folder + "/#{entry.name}"
     	entry.extract(target_dir)
 
-    	content = entry.get_input_stream.read
+    	entry.get_input_stream.read
     end
   end
 
@@ -107,6 +108,5 @@ def cik_filter_function
   cik_file.each do |line|
     cik_filter_list << line[/\d{10}/]
   end
-  cik_filter_list = cik_filter_list.reject{|s| s.to_s == ''}
   cik_filter_list
 end

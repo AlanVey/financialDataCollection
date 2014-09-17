@@ -9,6 +9,6 @@ gem 'rss'
 gem 'open-uri'
 gem 'fileutils'
 gem 'rubygems'
-gem 'zip'
+gem 'rubyzip'
 
 # Required for analyse section

@@ -11,9 +11,8 @@ def sec_download_add(from)
     comp_year  = company[1][0]
     target_dir = "sec/#{comp_year}/#{comp_month}/#{comp_cik}"
 
-    print "Downloading files for #{comp_cik} #{comp_year} #{comp_month}...\n"
-
     if not File.directory?(target_dir)
+      puts "Downloading files for #{comp_cik} #{comp_year} #{comp_month}..."
       FileUtils::mkdir_p(target_dir)
 
       company[2].each do |comp_link|
@@ -27,12 +26,10 @@ def sec_download_add(from)
           end
         end
       end
+      print "...done\n"
     else
       print "Files already downloaded for cik: #{comp_cik} #{comp_year} #{comp_month} .\n"
     end
-
-    print "...done\n"
-
   end
   print "All files have been downloaded.\n"
 end
