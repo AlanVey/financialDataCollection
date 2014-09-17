@@ -9,12 +9,12 @@ def profitability_ratios(data)
   
   gross_profit = data["GROSSPROFIT"][0][1]
   
-  profitability_data << gross_profit_margin(gross_profit, revenue)
-  #profitability_data << operating_profit_margin(operating_profit, revenue)
-  #profitability_data << net_profit_margin(net_profit, revenue)
-  #profitability_data << effective_tax_rate(data["INCOMETAXEXPENSEBENEFIT"], data["SALESREVENUENET"])
-  #profitability_data << return_on_assets(nil, nil, nil)
-  #profitability_data << return_on_capital_employed(nil, nil, nil, nil, nil)
+  profitability_data << gross_profit_margin(nil, nil)
+  profitability_data << operating_profit_margin(nil, nil)
+  profitability_data << net_profit_margin(nil, nil)
+  profitability_data << effective_tax_rate(nil, nil)
+  profitability_data << return_on_assets(nil, nil, nil)
+  profitability_data << return_on_capital_employed(nil, nil, nil, nil, nil)
 
   profitability_data
 end

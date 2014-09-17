@@ -10,14 +10,10 @@ end
 
 # Ratios ======================================================================
 
-def ocf_to_sales(ocf, revenue)
-  ocf.to_f/revenue
+def fixed_asset_turnover(revenue, property_plant_equipment)
+  revenue.to_f/property_plant_equipment
 end
 
-def fcf_to_ocf(fcf, ocf)
-  fcf.to_f/ocf
-end
-
-def capex_coverage(ocf, capital_expenditure)
-  ocf.to_f/capital_expenditure
+def revenue_per_employee(revenue, num_employees)
+  revenue.to_f/num_employees
 end
