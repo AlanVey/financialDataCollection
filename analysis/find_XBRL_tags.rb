@@ -19,7 +19,7 @@ def good_tags(tags_data, array_of_regex)
   best_tags
 end
 
-def find_tags(array_of_regex)
+def find_tags(xbrl_tags)
   tags_data = Hash.new
 
   (2009..Time.now.year).each do |year|
@@ -32,16 +32,12 @@ def find_tags(array_of_regex)
 
       month = month_convert(sprintf('%02d', m))
 
-      Dir["sec/#{year}/#{month}/*/*"].each do |file_path|
+      Dir["../download/sec/#{year}/#{month}/*/*"].each do |file_path|
         if file_path =~ /\d+[^_].xml$/
-          open_xbrl = file_is_10_K?(file_path)
-          if open_xbrl != nil
-            total_hash = find_tags_matching_regex(file_path, array_of_regex, 
-                                                  total_hash, open_xbrl.keys)
-            total_hash["NUMACCOUNTS"] += 1
-          else
-            next
-          end
+          open_xbrl = Xbrlware.ins(file_path).item_all_map.keys
+          total_hash["NUMACCOUNTS"] += 1
+
+          total_hash = find_matching_tags(xbrl_tags, total_hash, open_xbrl)
         end
       end
       print "Done\n"
@@ -52,36 +48,13 @@ def find_tags(array_of_regex)
   tags_data
 end
 
-def find_tags_matching_regex(path, regexs, hash, keys)
-  regexs.each do |regex|
-    matched_keys = Hash.new
-
-    keys.each do |key|
-      matched_keys[key] = 1 if key =~ regex
-    end
-
-    if hash[regex.to_s] == nil
-      hash[regex.to_s] = matched_keys
-    elsif matched_keys.keys.length != 0
-      matched_keys.keys.each do |mk|
-        if hash[regex.to_s][mk] == nil
-          hash[regex.to_s][mk] = 1
-        else
-          hash[regex.to_s][mk] += 1
-        end
-      end
+def find_matching_tags(tags, hash, keys)
+  tags.each do |tag|
+    if keys.include?(tag)
+      hash[tag] == nil ? hash[tag] = 1 : hash[tag] += 1
     end
   end 
   hash
-end
-
-def file_is_10_K?(path)
-  data = Xbrlware.ins(path).item_all_map
-  if data["DOCUMENTTYPE"].first.value == "10-K"
-    return data
-  else 
-    return nil
-  end
 end
 
 def month_convert(month)
