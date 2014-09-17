@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'open-uri'
 require_relative 'SECdownload.rb'
 
 def sec_download_add(from)
@@ -96,7 +95,7 @@ def retrieve_by_cik(filtered_items)
 end
 
 def retrieve_by_form_type(url)
-  feed           = open_feed(url)
+  feed = open_feed(url)
 
   if feed == nil
     return nil
@@ -106,7 +105,7 @@ def retrieve_by_form_type(url)
   filtered_items = Array.new
 
   items.each do |item|
-    filtered_items << item if item.children[9].children.text =~ /(10-K|10-Q)/
+    filtered_items << item if item.children[9].children.text =~ /(10-K)/
   end
 
   filtered_items

@@ -4,7 +4,7 @@ require 'xbrlware-ruby19'
 def good_tags(tags_data, array_of_regex)
   best_tags = Hash.new
 
-  (2010..2010).each do |year|
+  (2009..Time.now.year).each do |year|
     num_accounts = tags_data[year.to_s]["NUMACCOUNTS"]
     regex_hash   = Hash.new
 
@@ -22,7 +22,7 @@ end
 def find_tags(array_of_regex)
   tags_data = Hash.new
 
-  (2009..2014).each do |year|
+  (2009..Time.now.year).each do |year|
     puts "Reading tags for #{year}..."
 
     total_hash                = Hash.new

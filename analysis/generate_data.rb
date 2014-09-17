@@ -74,8 +74,7 @@ end
 def process_company_data(cik, from)
   annual_data = Array.new
 
-  #(from..Time.now.year)
-  (2010..2010).each do |year|
+  (from..Time.now.year).each do |year|
      annual_data << process_company_annual_data(cik, year)
   end
 

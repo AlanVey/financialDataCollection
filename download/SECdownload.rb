@@ -50,8 +50,8 @@ end
 def parse_all_rss(from, to)
 	company_download_info = Array.new
 
-	for year in from..to
-		for month in 1..12
+	(from..to).each do |year|
+		(1..12).each do |month|
 			company_download_info += parse_rss(year, month)
 		end
 	end
@@ -103,7 +103,7 @@ end
 
 def cik_filter_function
   cik_filter_list = Array.new
-  cik_file = File.open('my_ciks.txt')
+  cik_file = File.open('data/my_ciks.txt')
   cik_file.each do |line|
     cik_filter_list << line[/\d{10}/]
   end
