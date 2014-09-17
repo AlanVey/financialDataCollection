@@ -11,7 +11,6 @@ require_relative 'ratios/valuation_ratios'
 # Level 1 =====================================================================
 def generate_data(from)
   processed_data = process_data(from)
-  print processed_data
   generate_competitor_ratios(processed_data)
   generate_historical_ratios(processed_data)
 end
@@ -105,7 +104,7 @@ def process_company_annual_data(cik, year)
       data_path = file if file =~ /\d+[^_].xml$/
     end
     
-    if data_path =~ /.xml$/ and File.exist?(data_path) and file_is_10_K?(data_path)
+    if data_path =~ /.xml$/ and File.exist?(data_path)
       return [year, month, calculate_ratios(data_path)]
     end
   end
@@ -125,10 +124,6 @@ def calculate_ratios(path)
   #calculated_ratios << valuation_ratios(extracted_data)
 
   calculated_ratios
-end
-
-def file_is_10_K?(path)
-	Xbrlware.ins(path).item_all_map["DOCUMENTTYPE"].first.value == "10-K"
 end
 
 # Level 6 =====================================================================

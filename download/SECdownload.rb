@@ -82,7 +82,7 @@ def feed_reader(feed, cik_filter)
 	filtered_feed = Array.new
 
 	feed.items.each do |item|
-		if item.description =~ /(10-K|10-Q)/
+		if item.description =~ /10-K/
 			cik = cik_extractor(item.title)
 			if cik_filter.include?(cik[1])
 				link_zip = item.link.sub("index.htm", "xbrl.zip")

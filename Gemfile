@@ -1,5 +1,14 @@
 # A sample Gemfile
 source "https://rubygems.org"
-gem 'rubyzip'
+
 gem 'ruby' '=1.9.3'
-# gem "rails"
+
+# Required for download section
+gem 'nokogiri'
+gem 'rss'
+gem 'open-uri'
+gem 'fileutils'
+gem 'rubygems'
+gem 'zip'
+
+# Required for analyse section

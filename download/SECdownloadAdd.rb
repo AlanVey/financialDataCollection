@@ -1,4 +1,5 @@
 require 'nokogiri'
+
 require_relative 'SECdownload.rb'
 
 def sec_download_add(from)
@@ -105,7 +106,7 @@ def retrieve_by_form_type(url)
   filtered_items = Array.new
 
   items.each do |item|
-    filtered_items << item if item.children[9].children.text =~ /(10-K)/
+    filtered_items << item if item.children[9].children.text =~ /10-K/
   end
 
   filtered_items
