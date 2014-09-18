@@ -1,6 +1,5 @@
-def extract_data(path)
+def extract_data(path, tags_hash)
   extracted_data = Hash.new
-  tags_hash      = Array.new
   data           = Xbrlware.ins(path).item_all_map
   keys           = data.keys
 
@@ -16,7 +15,20 @@ def extract_data(path)
 end
 
 def get_tags_data(tags, data)
-
+  tags_values = Array.new
+  tags.each do |tag|
+    items = data["#{tag}"]
+    values = Array.new
+    if items != nil
+      items.each do |item| 
+        if item.context.id !~ /QTD/
+          values << [item.context.id[/\d{4}/], item.value]
+        end
+      end
+    end
+    tags_values << [tag, current_and_previous(values)]
+  end 
+  tags_values
 end
 
 def current_and_previous(figures)
@@ -44,46 +56,3 @@ def find_regex(regexs)
   end
   matching_tags
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  figures_needed.each do |figure|
-    items = data["#{figure}"]
-    values = Array.new
-    if items != nil
-      items.each do |item| 
-        if item.context.id !~ /QTD/
-          values << [item.context.id[/\d{4}/], item.value]
-        end
-      end
-      extracted_data.store("#{figure}", values)
-    end
-  end
-
-
-
-
-
-
-
