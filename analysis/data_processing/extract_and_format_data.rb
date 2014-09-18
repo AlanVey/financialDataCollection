@@ -7,26 +7,11 @@ def extract_data(path)
   tags_hash.each do |key, priority_list|
     priority_list.each do |tag_list|
       if (tag_list - keys).empty?
-        # Needs to return [[tag, [], []]]
-        get_tags_data(tag_list, data)
+        extracted_data[key] = get_tags_data(tag_list, data)
         break
       end
     end
   end
-
-  figures_needed.each do |figure|
-    items = data["#{figure}"]
-    values = Array.new
-    if items != nil
-      items.each do |item| 
-        if item.context.id !~ /QTD/
-          values << [item.context.id[/\d{4}/], item.value]
-        end
-      end
-      extracted_data.store("#{figure}", values)
-    end
-  end
-
   extracted_data
 end
 
@@ -64,6 +49,37 @@ end
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  figures_needed.each do |figure|
+    items = data["#{figure}"]
+    values = Array.new
+    if items != nil
+      items.each do |item| 
+        if item.context.id !~ /QTD/
+          values << [item.context.id[/\d{4}/], item.value]
+        end
+      end
+      extracted_data.store("#{figure}", values)
+    end
+  end
 
 
 
