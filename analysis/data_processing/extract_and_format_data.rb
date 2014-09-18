@@ -31,9 +31,14 @@ def get_tags_data(tags, data)
   tags_values
 end
 
-#returns {"TAG" => [current_year, previous_year]}
+# current_liabilities, accounts_receivable, assets, ofc, revenue, operating_profit, tax_expense, net_income, fixed_assets
+# takes { 'ocf' => [["OPERATINACTIVI..", [48384, 4898394]], ["UBDUBDUD", [454634, 2426246]], ... }
+# returns {"TAG" => [current_year, previous_year]}
 def calculate_figures(data)
-
+  calculated_figures = Hash.new
+  data.each do |key, val|
+    calculated_figures[key] = val[1] if val.length == 1      
+  end
 end
 
 def current_and_previous(figures)
