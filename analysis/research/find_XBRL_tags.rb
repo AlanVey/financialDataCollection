@@ -1,19 +1,6 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
 
-def print_tags_to_file(tags_data)
-  File.open('../research/data.csv', 'w') do |file|
-    tags_data.each do |year, tags_hash|
-      file.puts("#{year}")
-      file.puts("Tag, Accounts, 1, 2, 3, 4, 5, Total")
-      no_acc = tags_hash.delete("NUMACCOUNTS")
-      tags_hash.each do |tag, pc|
-        file.puts("#{tag}, #{no_acc}, #{pc[0]}, #{pc[1]}, #{pc[2]}, #{pc[3]}, #{pc[4]}, #{pc.inject{|sum, x| sum+x}}")
-      end
-    end
-  end
-end
-
 def find_tags(xbrl_tags)
   tags_data = Hash.new
 
@@ -38,6 +25,7 @@ def find_tags(xbrl_tags)
     tags_data[year.to_s] = total_hash
     puts "...Done"
   end
+  print_tags_to_file(tags_data)
   tags_data
 end
 
@@ -57,6 +45,19 @@ def find_matching_priority_tags(tags_hash, hash, keys)
     end
   end 
   hash
+end
+
+def print_tags_to_file(tags_data)
+  File.open('../research/data.csv', 'w') do |file|
+    tags_data.each do |year, tags_hash|
+      file.puts("#{year}")
+      file.puts("Tag, Accounts, 1, 2, 3, 4, 5, Total")
+      no_acc = tags_hash.delete("NUMACCOUNTS")
+      tags_hash.each do |tag, pc|
+        file.puts("#{tag}, #{no_acc}, #{pc[0]}, #{pc[1]}, #{pc[2]}, #{pc[3]}, #{pc[4]}, #{pc.inject{|sum, x| sum+x}}")
+      end
+    end
+  end
 end
 
 def month_convert(month)
