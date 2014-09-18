@@ -1,7 +1,8 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
 
-require_relative 'print_data_to_file'
+require_relative 'data_processing/print_data_to_file'
+require_relative 'data_processing/extract_and_format_data'
 
 require_relative 'ratios/cash_flow_ratios'
 require_relative 'ratios/debt_ratios'
@@ -75,64 +76,21 @@ def calculate_ratios(path)
   calculated_ratios = Array.new
   extracted_data    = extract_data(path)
 
-  #calculated_ratios << liquidity_ratios(extracted_data)
-  #calculated_ratios << debt_ratios(extracted_data)
+  calculated_ratios << liquidity_ratios(extracted_data)
+  calculated_ratios << debt_ratios(extracted_data)
   calculated_ratios << profitability_ratios(extracted_data)
-  #calculated_ratios << cash_flow_ratios(extracted_data)
-  #calculated_ratios << operating_performance_ratios(extracted_data)
-  #calculated_ratios << valuation_ratios(extracted_data)
+  calculated_ratios << cash_flow_ratios(extracted_data)
+  calculated_ratios << operating_performance_ratios(extracted_data)
+  calculated_ratios << valuation_ratios(extracted_data)
 
   calculated_ratios
 end
 
-# Level 6 =====================================================================
-def extract_data(path)
-	data = Xbrlware.ins(path).item_all_map
-	extracted_data = {}
-	figures_needed = ["ASSETSCURRENT", "LIABILITIESCURRENT", "INVENTORYNET", "ACCOUNTSRECEIVABLENETCURRENT",
-                    "ACCOUNTSPAYABLECURRENT", "ASSETS", "LIABILITIESANDSTOCKHOLDERSEQUITY", "LIABILITIES",
-                    "LONGTERMDEBTANDCAPITALLEASEOBLIGATIONS", "DEBTCURRENT", "PROPERTYPLANTANDEQUIPMENTNET",
-                    "NETCASHPROVIDEDBYUSEDINCONTINUINGOPERATIONS", "NETCASHPROVIDEDBYUSEDINOPERATINGACTIVITIES",
-                    "NETCASHPROVIDEDBYUSEDINOPERATINGACTIVITIESCONTINUINGOPERATIONS", "REVENUES",
-                    "COSTOFGOODSANDSERVICESSOLD", "COSTOFGOODSSOLD", "COSTOFSERVICES", "SALESREVENUENET",
-                    "SALESREVENUESERVICESNET", "SALESREVENUEGOODSNET", "GROSSPROFIT", "OPERATINGINCOMELOSS",
-                    "INCOMELOSSFROMCONTINUINGOPERATIONSINCLUDINGPORTIONATTRIBUTABLETONONCONTROLLINGINTEREST",
-                    "NETINCOMELOSS", "PROPERTYPLANTANDEQUIPMENTGROSS", "PAYMENTSTOACQUIREPROPERTYPLANTANDEQUIPMENT",
-                    "ACCUMULATEDDEPRECIATIONDEPLETIONANDAMORTIZATIONPROPERTYPLANTANDEQUIPMENT",
-                    "INCOMETAXEXPENSEBENEFIT", "EARNINGSPERSHAREBASIC", "EARNINGSPERSHAREDILUTED"]
-
-	figures_needed.each do |figure|
-		items = data["#{figure}"]
-		values = Array.new
-		if items != nil
-			items.each do |item| 
-        if item.context.id !~ /QTD/
-          values << [item.context.id[/\d{4}/], item.value]
-        end
-      end
-			extracted_data.store("#{figure}", values)
-		end
-	end
-
-	extracted_data
-end
-
 # Util Methods =================================================================
-
 def month_convert(month)
   months = {'01' => "Jan", '02' => "Feb", '03' => "Mar", '04' => "Apr", 
             '05' => "May", '06' => "Jun", '07' => "Jul", '08' => "Aug", 
             '09' => "Sep", '10' => "Oct", '11' => "Nov", '12' => "Dec"}
 
   months[month]
-end
-
-def current_and_previous(figures)
-	current = [0,0]
-	previous = [0,0]
-	for i in 0..(figures.length-1)
-		current = [figures[i][0].to_i, i] if current[0] < figures[i][0].to_i
-		previous = [figures[i][0].to_i, i] if previous[0] < ( figures[i][0].to_i - 1 )
-	end
-	[figures[current[1]][1], figures[previous[1]][1]]
 end

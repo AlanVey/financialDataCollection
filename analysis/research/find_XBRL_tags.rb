@@ -2,7 +2,7 @@ require 'rubygems'
 require 'xbrlware-ruby19'
 
 def print_tags_to_file(tags_data)
-  File.open('research/data.csv', 'w') do |file|
+  File.open('../research/data.csv', 'w') do |file|
     tags_data.each do |year, tags_hash|
       file.puts("#{year}")
       file.puts("Tag, Accounts, 1, 2, 3, 4, 5, Total")
@@ -26,7 +26,7 @@ def find_tags(xbrl_tags)
       print "  Reading tags for #{m}..."
       month = month_convert(sprintf('%02d', m))
 
-      Dir["../download/sec/#{year}/#{month}/*/*"].each do |file_path|
+      Dir["../../download/sec/#{year}/#{month}/*/*"].each do |file_path|
         if file_path =~ /\d+[^_].xml$/
           open_xbrl = Xbrlware.ins(file_path).item_all_map.keys
           total_hash["NUMACCOUNTS"] += 1
