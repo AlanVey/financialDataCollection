@@ -11,7 +11,7 @@ def extract_data(path, tags_hash)
       end
     end
   end
-  extracted_data
+  calculate_figures(extracted_data)
 end
 
 def get_tags_data(tags, data)
@@ -29,6 +29,11 @@ def get_tags_data(tags, data)
     tags_values << [tag, current_and_previous(values)]
   end 
   tags_values
+end
+
+#returns {"TAG" => [current_year, previous_year]}
+def calculate_figures(data)
+
 end
 
 def current_and_previous(figures)
