@@ -76,6 +76,7 @@ def get_keys(tags_data)
   tags_data.each do |year, tags_hash|
     extra_keys = tags_data[year].keys - extra_keys
   end
+  extra_keys = all_keys - extra_keys
   all_keys + extra_keys
 end
 

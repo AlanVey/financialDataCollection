@@ -1,7 +1,18 @@
 def extract_data(path)
-  data = Xbrlware.ins(path).item_all_map
-  extracted_data = {}
-  figures_needed = []
+  extracted_data = Hash.new
+  tags_hash      = Array.new
+  data           = Xbrlware.ins(path).item_all_map
+  keys           = data.keys
+
+  tags_hash.each do |key, priority_list|
+    priority_list.each do |tag_list|
+      if (tag_list - keys).empty?
+        # Needs to return [[tag, [], []]]
+        get_tags_data(tag_list, data)
+        break
+      end
+    end
+  end
 
   figures_needed.each do |figure|
     items = data["#{figure}"]
@@ -19,6 +30,10 @@ def extract_data(path)
   extracted_data
 end
 
+def get_tags_data(tags, data)
+
+end
+
 def current_and_previous(figures)
   current = [0,0]
   previous = [0,0]
@@ -28,3 +43,31 @@ def current_and_previous(figures)
   end
   [figures[current[1]][1], figures[previous[1]][1]]
 end
+
+def find_regex(regexs)
+  matching_tags = Hash.new
+  Dir["../../download/sec/*/*/*/*"].each do |file_path|
+    puts "#{file_path}..."
+    if file_path =~ /\d+[^_].xml/
+      Xbrlware.ins(file_path).item_all_map.keys.each do |key|
+        regexs.each do |re|
+          matching_tags[re.to_s] = key if key =~ re 
+        end
+      end
+    end
+    puts "...Done"
+  end
+  matching_tags
+end
+
+
+
+
+
+
+
+
+
+
+
+
