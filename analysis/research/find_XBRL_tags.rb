@@ -48,16 +48,35 @@ def find_matching_priority_tags(tags_hash, hash, keys)
 end
 
 def print_tags_to_file(tags_data)
-  File.open('../research/data.csv', 'w') do |file|
+  File.open('data.csv', 'w') do |file|
+    keys = get_keys(tags_data)
+
+    keys.each do |key|
+      file.write(", #{key}") if key != "NUMACCOUNTS"
+    end
+    file.write("\n")
+
     tags_data.each do |year, tags_hash|
-      file.puts("#{year}")
-      file.puts("Tag, Accounts, 1, 2, 3, 4, 5, Total")
-      no_acc = tags_hash.delete("NUMACCOUNTS")
-      tags_hash.each do |tag, pc|
-        file.puts("#{tag}, #{no_acc}, #{pc[0]}, #{pc[1]}, #{pc[2]}, #{pc[3]}, #{pc[4]}, #{pc.inject{|sum, x| sum+x}}")
+      file.write("#{year}, ")
+      keys.each do |key|
+        num_acc = tags_hash["NUMACCOUNTS"].to_f
+        if key != "NUMACCOUNTS"
+          file.write("#{tags_hash[key].inject {|sum, x| sum + x}/num_acc}, ")
+        end
       end
+      file.write("\n")
     end
   end
+  puts "Data printed to data.csv"
+end
+
+def get_keys(tags_data)
+  all_keys   = tags_data.first[1].keys
+  extra_keys = Array.new
+  tags_data.each do |year, tags_hash|
+    extra_keys = tags_data[year].keys - extra_keys
+  end
+  all_keys + extra_keys
 end
 
 def month_convert(month)
