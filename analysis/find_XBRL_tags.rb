@@ -1,6 +1,17 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
 
+def print_tag_stats_to_file
+  File.open('data.csv', 'w') do |file|
+    file.write("Tag,\n")
+    found_tags.keys.each do |year|
+      found_tags[year].each do |key, val|
+        file.write("#{year}, #{key}, #{val.to_f/found_tags[year]["NUMACCOUNTS"]}\n")
+      end
+    end
+  end
+end
+
 def good_tags(tags_data, array_of_regex)
   best_tags = Hash.new
 
