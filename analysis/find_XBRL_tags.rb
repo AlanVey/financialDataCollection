@@ -1,12 +1,14 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
 
-def print_tag_stats_to_file
+def print_tags_file(tags_data)
   File.open('data.csv', 'w') do |file|
-    file.write("Tag,\n")
-    found_tags.keys.each do |year|
-      found_tags[year].each do |key, val|
-        file.write("#{year}, #{key}, #{val.to_f/found_tags[year]["NUMACCOUNTS"]}\n")
+    tags_data.each do |year, tags_hash|
+      file.puts("#{year}")
+      file.puts("Tag, Accounts, 1, 2, 3, 4, 5, Total")
+      no_acc = tags_hash.delete("NUMACCOUNTS")
+      tags_hash.each do |tag, pc|
+        file.puts("#{tag}, #{no_acc}, #{pc[0]}, #{pc[1]}, #{pc[2]}, #{pc[3]}, #{pc[4]}, #{pc.inject{|sum, x| sum+x}}")
       end
     end
   end
