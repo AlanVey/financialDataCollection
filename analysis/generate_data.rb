@@ -44,9 +44,7 @@ def get_ciks
   ciks = Array.new
   file = File.open('my_ciks.txt', 'r') 
 
-  file.each do |line|
-    ciks << line[/\d+/]
-  end
+  file.each { |line| ciks << line[/\d+/] }
 
   file.close
   ciks
