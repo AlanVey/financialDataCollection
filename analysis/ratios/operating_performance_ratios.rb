@@ -1,19 +1,16 @@
 def operating_performance_ratios(data)
   operating_performance_data = Array.new
 
-  operating_performance_data << ocf_to_sales(nil, nil)
-  operating_performance_data << fcf_to_ocf(nil, nil)
-  operating_performance_data << capex_coverage(nil, nil)
+  revenue      = data["revenue"][0]
+  fixed_assets = data["fixed_assets"][0]
+
+  operating_performance_data << fixed_asset_turnover(revenue, fixed_assets)
 
   operating_performance_data
 end
 
 # Ratios ======================================================================
 
-def fixed_asset_turnover(revenue, property_plant_equipment)
+def fixed_asset_turnover(revenue, fixed_assets)
   revenue.to_f/property_plant_equipment
-end
-
-def revenue_per_employee(revenue, num_employees)
-  revenue.to_f/num_employees
 end
