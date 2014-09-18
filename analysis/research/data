@@ -1,0 +1,30 @@
+find_tags with this
+
+{'current_assets' => [["ASSETSCURRENT"]], 
+ 'current_liabilities' => [["LIABILITIESCURRENT"]], 
+ 'inventory_net' => [["INVENTORYNET"]], 
+ 'accounts_receivable' => [["ACCOUNTSRECEIVABLENETCURRENT"], ["RECEIVABLESNETCURRENT"]], 
+ 'accounts_payable' => [["ACCOUNTSPAYABLECURRENT"], ["ACCOUNTSPAYABLEANDACCRUEDLIABILITIESCURRENT", "ACCRUEDLIABILITIESCURRENT"]], 
+ 'assets' => [["ASSETS"]], 
+ 'equity' => [["LIABILITIESANDSTOCKHOLDERSEQUITY", "LIABILITIES"],
+ ["LIABILITIESNONCURRENT", "LIABILITIESCURRENT", "LIABILITIESANDSTOCKHOLDERSEQUITY"]],
+ 'long_term_debt' => [["LONGTERMDEBTANDCAPITALLEASEOBLIGATIONS"], ["LONGTERMDEBTNONCURRENT", "CAPITALLEASEOBLIGATIONSNONCURRENT"], ["LONGTERMDEBTNONCURRENT"]], 
+ 'current_debt' => [["DEBTCURRENT"], ["SHORTTERMBORROWINGS", "LONGTERMDEBTCURRENT"], ["SHORTTERMBORROWINGS", "LONGTERMDEBTANDCAPITALLEASEOBLIGATIONSCURRENT"]], 
+ 'fixed_assets' => [["PROPERTYPLANTANDEQUIPMENTNET"]],
+ 'ocf' => [["NETCASHPROVIDEDBYUSEDINOPERATINGACTIVITIESCONTINUINGOPERATIONS"], ["NETCASHPROVIDEDBYUSEDINCONTINUINGOPERATIONS"],
+ ["NETCASHPROVIDEDBYUSEDINOPERATINGACTIVITIES"]], 
+ 'cogs' => [["COSTOFGOODSANDSERVICESSOLD"], ["COSTOFGOODSSOLD", "COSTOFSERVICES"], ["COSTOFGOODSSOLD"], ["COSTOFSERVICES"]], 
+ 'revenue' => [["REVENUES"], ["SALESREVENUENET"], ["SALESREVENUESERVICESNET", "SALESREVENUEGOODSNET"], ["SALESREVENUESERVICESNET"], ["SALESREVENUEGOODSNET"]], 
+ 'gross_profit' => [["GROSSPROFIT"]], 
+ 'operating_profit' => [["OPERATINGINCOMELOSS"]], 
+ 'tax_expense' => [["INCOMETAXEXPENSEBENEFIT"]],
+ 'pretax_income' => [["INCOMELOSSFROMCONTINUINGOPERATIONSBEFOREINCOMETAXESEXTRAORDINARYITEMSNONCONTROLLINGINTEREST"], 
+ ["INCOMELOSSFROMCONTINUINGOPERATIONSBEFOREINCOMETAXESMINORITYINTERESTANDINCOMELOSSFROMEQUITYMETHODINVESTMENTS"], ["INTERESTANDDEBTEXPENSE", "NONOPERATINGINCOMEEXPENSE", "OPERATINGINCOMELOSS"], ["INTERESTANDDEBTEXPENSE", "OPERATINGINCOMELOSS"]], 
+ 'net_income' => [["NETINCOMELOSS"], ["PROFITLOSS"]], 
+ 'capex' => [["PAYMENTSTOACQUIREPROPERTYPLANTANDEQUIPMENT"], ["PROPERTYPLANTANDEQUIPMENTGROSS", "ACCUMULATEDDEPRECIATIONDEPLETIONANDAMORTIZATIONPROPERTYPLANTANDEQUIPMENT"]],
+ 'eps_basic' => [["EARNINGSPERSHAREBASIC"]], 
+ 'eps_diluted' => [["EARNINGSPERSHAREDILUTED"]]}
+
+returned this for all years 2010-2014
+
+{"2010"=>{"NUMACCOUNTS"=>58, "current_assets"=>[58], "current_liabilities"=>[58], "inventory_net"=>[39], "accounts_receivable"=>[53, 3], "accounts_payable"=>[53, 0], "assets"=>[58], "equity"=>[33, 8], "ocf"=>[8, 0, 50], "cogs"=>[17, 10, 7, 5], "revenue"=>[26, 28, 0, 0, 3], "gross_profit"=>[37], "operating_profit"=>[53], "tax_expense"=>[56], "pretax_income"=>[0, 49, 0, 0], "net_income"=>[52, 6], "eps_basic"=>[57], "eps_diluted"=>[57], "long_term_debt"=>[10, 0, 12], "fixed_assets"=>[56], "capex"=>[40, 6], "current_debt"=>[10, 5, 0]}, "2011"=>{"NUMACCOUNTS"=>187, "current_assets"=>[185], "current_liabilities"=>[185], "accounts_receivable"=>[160, 17], "accounts_payable"=>[167, 0], "assets"=>[185], "equity"=>[135, 18], "long_term_debt"=>[20, 3, 57], "fixed_assets"=>[183], "ocf"=>[19, 0, 166], "cogs"=>[51, 18, 27, 21], "revenue"=>[72, 96, 0, 10, 7], "gross_profit"=>[126], "operating_profit"=>[179], "tax_expense"=>[183], "pretax_income"=>[9, 160, 0, 0], "net_income"=>[172, 13], "capex"=>[142, 24], "eps_basic"=>[174], "eps_diluted"=>[174], "inventory_net"=>[123], "current_debt"=>[29, 7, 1]}, "2012"=>{"NUMACCOUNTS"=>476, "current_assets"=>[464], "current_liabilities"=>[464], "inventory_net"=>[285], "accounts_receivable"=>[409, 24], "assets"=>[475], "equity"=>[352, 36], "fixed_assets"=>[472], "ocf"=>[87, 2, 387], "cogs"=>[142, 39, 72, 57], "revenue"=>[216, 207, 0, 33, 16], "gross_profit"=>[357], "operating_profit"=>[454], "tax_expense"=>[457], "pretax_income"=>[87, 363, 0, 2], "net_income"=>[420, 25], "capex"=>[392, 55], "eps_basic"=>[419], "eps_diluted"=>[421], "accounts_payable"=>[413, 1], "long_term_debt"=>[50, 18, 114], "current_debt"=>[50, 14, 8]}, "2013"=>{"NUMACCOUNTS"=>480, "current_assets"=>[472], "current_liabilities"=>[472], "accounts_receivable"=>[425, 22], "accounts_payable"=>[424, 3], "assets"=>[480], "equity"=>[366, 37], "long_term_debt"=>[57, 23, 115], "fixed_assets"=>[477], "ocf"=>[93, 1, 386], "cogs"=>[133, 39, 72, 64], "revenue"=>[241, 192, 0, 27, 15], "gross_profit"=>[377], "operating_profit"=>[458], "tax_expense"=>[465], "pretax_income"=>[124, 337, 0, 1], "net_income"=>[428, 19], "capex"=>[402, 72], "eps_basic"=>[417], "eps_diluted"=>[417], "inventory_net"=>[280], "current_debt"=>[47, 9, 5]}, "2014"=>{"NUMACCOUNTS"=>452, "current_assets"=>[445], "current_liabilities"=>[444], "accounts_receivable"=>[402, 21], "accounts_payable"=>[400, 2], "assets"=>[452], "equity"=>[348, 35], "long_term_debt"=>[60, 23, 108], "fixed_assets"=>[447], "ocf"=>[121, 1, 330], "cogs"=>[108, 41, 63, 58], "revenue"=>[256, 159, 0, 22, 11], "gross_profit"=>[356], "operating_profit"=>[433], "tax_expense"=>[446], "pretax_income"=>[149, 290, 0, 1], "net_income"=>[409, 17], "capex"=>[383, 61], "eps_basic"=>[384], "eps_diluted"=>[385], "inventory_net"=>[248], "current_debt"=>[44, 9, 4]}}

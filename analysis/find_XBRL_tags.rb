@@ -2,7 +2,7 @@ require 'rubygems'
 require 'xbrlware-ruby19'
 
 def print_tags_to_file(tags_data)
-  File.open('data.csv', 'w') do |file|
+  File.open('research/data.csv', 'w') do |file|
     tags_data.each do |year, tags_hash|
       file.puts("#{year}")
       file.puts("Tag, Accounts, 1, 2, 3, 4, 5, Total")
