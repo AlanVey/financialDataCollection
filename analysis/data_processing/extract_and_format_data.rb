@@ -39,7 +39,7 @@ end
 def calculate_figures(data)
   calculated_figures = Hash.new
   data.each do |key, val|
-    calculated_figures[key] = val[1] if val.length == 1      
+    calculated_figures[key] = val[0][1] if val.length == 1      
   end
   calculated_figures
 end
