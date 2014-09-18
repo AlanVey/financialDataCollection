@@ -2,7 +2,7 @@ def generate_competitor_ratios(processed_data)
   current_year = processed_data[0][1].length - 1
 
   (0..current_year).each do |year|
-    File.open("sec/#{year}.csv", 'w') do |file|
+    File.open("#{year}.csv", 'w') do |file|
       file.write "CIK, GP, OP, NP\n"
 
       processed_data.each do |company|
@@ -25,7 +25,7 @@ def generate_historical_ratios(processed_data)
   processed_data.each do |company|
     company[1].each do |year|
       if year[2].class.to_s == "Array"
-        File.open("sec/#{company[0]}.csv", 'w') do |file|
+        File.open("#{company[0]}.csv", 'w') do |file|
           file.write "Year, GP, OP, NP\n"
           file.write "#{year[0]},"
           year[2].each do |ratio_group|

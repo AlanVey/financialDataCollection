@@ -42,7 +42,7 @@ end
 
 def get_ciks
   ciks = Array.new
-  file = File.open('my_ciks.txt', 'r') 
+  file = File.open('../download/data/my_ciks.txt', 'r') 
 
   file.each { |line| ciks << line[/\d+/] }
 
@@ -57,7 +57,7 @@ def process_company_annual_data(cik, year)
 
   (jan..dec).each do |month|
     month     = month_convert(sprintf('%02d', month))
-    data_path = "sec/#{year}/#{month}/#{cik}/"
+    data_path = "../download/sec/#{year}/#{month}/#{cik}/"
     Dir[data_path + '*'].each do |file|
       data_path = file if file =~ /\d+[^_].xml$/
     end
