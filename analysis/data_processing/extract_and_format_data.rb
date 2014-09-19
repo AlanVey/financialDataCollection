@@ -23,11 +23,12 @@ def get_tags_data(tags, data)
     values = Array.new
 
     items.each do |item| 
-      if item.context.entity.segment == nil
+      # TODO: needs work
+      if items.count <= 3 or item.context.entity.segment == nil
         values << [parse_context_id(item.context.id), item.value] 
       end
     end
-
+    
     tags_values << [tag, current_and_previous(values)]
   end 
   tags_values

@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
+require 'open-uri'
 
 require_relative 'data_processing/print_data_to_file'
 require_relative 'data_processing/extract_and_format_data'
@@ -23,7 +24,7 @@ def process_data(from)
   all_company_data = Array.new
 
   get_ciks.each do |cik|
-    all_company_data << [cik, process_company_data(cik, from)]
+    all_company_data << [cik, get_industry(cik), process_company_data(cik, from)]
   end
 
   all_company_data
@@ -34,7 +35,7 @@ def process_company_data(cik, from)
   annual_data = Array.new
 
   (from..Time.now.year).each do |year|
-     annual_data << process_company_annual_data(cik, year)
+    annual_data << process_company_annual_data(cik, year)
   end
 
   annual_data
@@ -50,6 +51,26 @@ def get_ciks
   ciks
 end
 
+def get_industry(cik)
+  ticker = nil
+
+  Dir["../download/sec/*/*/#{cik}/*"].each do |path|
+    if path =~ /\d+[^_].xml$/
+      ticker = path[/[a-z]+-/]
+      ticker = ticker[0..ticker.length - 2]
+    end
+  end
+
+  if ticker != nil
+    parsed = Nokogiri::HTML(open("http://finance.yahoo.com/q/pr?s=#{ticker}"))
+    # Throws error of nil class sometimes
+    puts ticker # use this to error catch
+    return parsed.xpath("//table/tr").children[15].text
+  else
+    return nil
+  end
+end
+
 # Level 4 =====================================================================
 def process_company_annual_data(cik, year)
   jan         = 1
@@ -58,6 +79,7 @@ def process_company_annual_data(cik, year)
   (jan..dec).each do |month|
     month     = month_convert(sprintf('%02d', month))
     data_path = "../download/sec/#{year}/#{month}/#{cik}/"
+
     Dir[data_path + '*'].each do |file|
       data_path = file if file =~ /\d+[^_].xml$/
     end
