@@ -1,28 +1,13 @@
 def cash_flow_ratios(data)
-  cash_flow_data = Array.new
+  cash_flow_data = Array.new(3, 0)
 
-  ocf     = data["ocf"][0]
-  revenue = data["revenue"][0]
-  capex   = data["capex"][0]
+  if data["ocf"] != nil
+    ocf = data["ocf"][0].to_f
 
-
-  cash_flow_data << ocf_to_sales(ocf, revenue)
-  cash_flow_data << fcf_to_ocf(nil, ocf)
-  cash_flow_data << capex_coverage(ocf, capex)
+    cash_flow_data[0] = ocf/data["revenue"][0].to_f if data["revenue"] != nil
+    cash_flow_data[1] = data["fcf"][0].to_f/ocf     if data["fcf"] != nil
+    cash_flow_data[2] = ocf/data["capex"][0].to_f   if data["capex"] != nil
+  end
 
   cash_flow_data
-end
-
-# Ratios ======================================================================
-
-def ocf_to_sales(ocf, revenue)
-  ocf.to_f/revenue
-end
-
-def fcf_to_ocf(fcf, ocf)
-  fcf.to_f/ocf
-end
-
-def capex_coverage(ocf, capex)
-  ocf.to_f/capital_expenditure
 end

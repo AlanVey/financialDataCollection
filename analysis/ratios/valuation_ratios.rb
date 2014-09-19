@@ -1,33 +1,21 @@
 def valuation_ratios(data)
-  valuation_data = Array.new
+  valuation_data = Array.new(5, 0)
 
-  valuation_data << price_to_book_ratio(nil, nil)
-  valuation_data << peg(nil, nil, nil)
-  valuation_data << price_to_ocf(nil, nil)
-  valuation_data << price_to_sales(nil, nil)
-  valuation_data << price_to_ebitda(nil, nil)
+  if data["price"] != nil
+    price = data["price"][0].to_f
+
+    valuation_data[0] = price/data["ocf"][0].to_f     if data["ocf"] != nil
+    valuation_data[1] = price/data["equity"][0].to_f  if data["equity"] != nil
+    valuation_data[2] = price/data["revenue"][0].to_f if data["revenue"] != nil
+
+    if data["ebitda"] != nil
+      ebitda = data["ebitda"][0].to_f
+
+      valuation_data[3] = price/ebitda
+      valuation_data[4] = price/ebitda/data["eps_growth"][0].to_f if data["eps_growth"]!= nil
+    end
+  end
 
   valuation_data
 end
 
-# Ratios ======================================================================
-
-def price_to_book_ratio(price, equity)
-  price.to_f/equity
-end
-
-def peg(price, eps, eps_growth)
-  price.to_f/ebitda/eps_growth.to_f
-end
-
-def price_to_ocf(price, ocf)
-  price.to_f/ocf
-end
-
-def price_to_sales(price, sales)
-  price.to_f/sales
-end
-
-def price_to_ebitda(price, ebitda)
-  price.to_f/ebitda
-end
