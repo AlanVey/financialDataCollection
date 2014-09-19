@@ -15,6 +15,21 @@ def extract_data(path)
   calculate_figures(extracted_data)
 end
 
+def combinations(array)
+  combinations = (3..5).flat_map{|n| array.permutation(n).map.to_a }
+
+  filtered_combs = Array.new
+  combinations.each do |combination|
+    unique = true
+    filtered_combs.each do |filtered_comb|
+      unique = (not (combination.uniq.sort == filtered_comb.uniq.sort))
+      break if not unique
+    end
+    filtered_combs << combination if unique
+  end
+  filtered_combs
+end
+
 def get_tags_data(tags, data)
   tags_values = Array.new
   tags.each do |tag|
@@ -55,6 +70,7 @@ def current_and_previous(figures)
     current = [figures[i][0].to_i, i] if current[0] < figures[i][0].to_i
     previous = [figures[i][0].to_i, i] if previous[0] < ( figures[i][0].to_i - 1 )
   end
+  print 
   [figures[current[1]][1], figures[previous[1]][1]]
 end
 
