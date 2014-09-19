@@ -15,46 +15,25 @@ def extract_data(path)
   calculate_figures(extracted_data)
 end
 
-def combinations(array)
-  combinations = (1..5).flat_map{|n| array.permutation(n).map.to_a }
-
-  filtered_combs = Array.new
-  combinations.each do |combination|
-    unique = true
-    filtered_combs.each do |filtered_comb|
-      unique = (not (combination.uniq.sort == filtered_comb.uniq.sort))
-      break if not unique
-    end
-    filtered_combs << combination if unique
-  end
-  filtered_combs.reverse
-end
-
 def get_tags_data(tags, data)
   tags_values = Array.new
 
   tags.each do |tag|
     items = data["#{tag}"]
     values = Array.new
-    
+
     items.each do |item| 
-        #if item.context.id !~ /QTD/
-        #  if item.context.id =~ /Q/ 
-        #    values << [item.context.id[/\d{4}/], item.value, item.context.id] if item.context.id =~ /Q4/
-        #  end
-          
-      values << [item.context.id[/20\d{2}$/], item.value]
-      puts "context id: #{item.context.id}"
-        #end
+      if item.context.entity.segment == nil
+        values << [item.context.id[/20\d{2}$/], item.value] 
+      end
     end
+
     tags_values << [tag, current_and_previous(values)]
   end 
   tags_values
 end
 
-# current_liabilities, accounts_receivable, assets, ofc, revenue, operating_profit, tax_expense, net_income, fixed_assets
-# takes { 'ocf' => [["OPERATINACTIVI..", [48384, 4898394]], ["UBDUBDUD", [454634, 2426246]], ... }
-# returns {"TAG" => [current_year, previous_year]}
+# TODO: perform calculations and return in format used by ratios
 def calculate_figures(data)
   calculated_figures = Hash.new
   data.each do |key, val|
@@ -72,24 +51,6 @@ def current_and_previous(figures)
   end
   print 
   [figures[current[1]][1], figures[previous[1]][1]]
-end
-
-def find_regex(regexs)
-  matching_tags = Hash.new
-  Dir["../../download/sec/*/*/*/*"].each do |file_path|
-    if file_path =~ /\d+[^_].xml/
-      print "#{file_path}..."
-
-      Xbrlware.ins(file_path).item_all_map.keys.each do |key|
-        regexs.each do |re|
-          matching_tags[re.to_s] = Array.new if matching_tags[re.to_s] == nil
-          matching_tags[re.to_s] << key if key =~ re and not matching_tags[re.to_s].include?(key)
-        end
-      end
-      puts "Done"
-    end
-  end
-  matching_tags
 end
 
 def get_tags_hash
