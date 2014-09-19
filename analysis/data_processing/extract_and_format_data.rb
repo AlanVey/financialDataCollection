@@ -16,7 +16,7 @@ def extract_data(path)
 end
 
 def combinations(array)
-  combinations = (3..5).flat_map{|n| array.permutation(n).map.to_a }
+  combinations = (1..5).flat_map{|n| array.permutation(n).map.to_a }
 
   filtered_combs = Array.new
   combinations.each do |combination|
@@ -27,7 +27,7 @@ def combinations(array)
     end
     filtered_combs << combination if unique
   end
-  filtered_combs
+  filtered_combs.reverse
 end
 
 def get_tags_data(tags, data)
@@ -43,7 +43,7 @@ def get_tags_data(tags, data)
         #    values << [item.context.id[/\d{4}/], item.value, item.context.id] if item.context.id =~ /Q4/
         #  end
           
-      values << [item.context.id[/20\d{2}/], item.value]
+      values << [item.context.id[/20\d{2}$/], item.value]
       puts "context id: #{item.context.id}"
         #end
     end
