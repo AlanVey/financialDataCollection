@@ -24,7 +24,7 @@ def get_tags_data(tags, data)
 
     items.each do |item| 
       if item.context.entity.segment == nil
-        values << [item.context.id[/20\d{2}$/], item.value] 
+        values << [parse_context_id(item.context.id), item.value] 
       end
     end
 
@@ -51,6 +51,12 @@ def current_and_previous(figures)
   end
   print 
   [figures[current[1]][1], figures[previous[1]][1]]
+end
+
+def parse_context_id(context_id)
+  years = Array.new
+  context_id.scan(/20\d{2}/).each {|year| years << year.to_i }
+  years.max.to_s
 end
 
 def get_tags_hash
