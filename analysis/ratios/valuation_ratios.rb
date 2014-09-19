@@ -1,21 +1,21 @@
-def valuation_ratios(data)
+require 'yahoo_finance_scraper'
+
+def valuation_ratios(data, path)
   valuation_data = Array.new(5, 0)
 
-  if data["price"] != nil
-    price = data["price"][0].to_f
-
-    valuation_data[0] = price/data["ocf"][0].to_f     if data["ocf"] != nil
-    valuation_data[1] = price/data["equity"][0].to_f  if data["equity"] != nil
-    valuation_data[2] = price/data["revenue"][0].to_f if data["revenue"] != nil
-
-    if data["ebitda"] != nil
-      ebitda = data["ebitda"][0].to_f
-
-      valuation_data[3] = price/ebitda
-      valuation_data[4] = price/ebitda/data["eps_growth"][0].to_f if data["eps_growth"]!= nil
-    end
-  end
+  ticker = get_ticker(path)
+  comp   = YahooFinance::Scraper::Company.new(ticker).details
+  
+  valuation_data[0] = comp[:earnings_per_share]
+  valuation_data[1] = comp[:price_to_sales]
+  valuation_data[2] = comp[:price_to_book]
+  valuation_data[3] = comp[:price_to_earnings]
+  valuation_data[4] = comp[:peg_ratio]
 
   valuation_data
+end
+
+def get_ticker(path)
+  return 'aapl'
 end
 
