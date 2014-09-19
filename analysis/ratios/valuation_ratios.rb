@@ -16,6 +16,7 @@ def valuation_ratios(data, path)
 end
 
 def get_ticker(path)
-  return 'aapl'
+  tmp = path[/[a-z]+-/]
+  tmp[0..tmp.length - 2]
 end
 
