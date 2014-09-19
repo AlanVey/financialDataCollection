@@ -58,17 +58,16 @@ def get_industry(cik)
     if path =~ /\d+[^_].xml$/
       ticker = path[/[a-z]+-/]
       ticker = ticker[0..ticker.length - 2]
+      break
     end
   end
 
-  if ticker != nil
-    parsed = Nokogiri::HTML(open("http://finance.yahoo.com/q/pr?s=#{ticker}"))
-    # Throws error of nil class sometimes
-    puts ticker # use this to error catch
-    return parsed.xpath("//table/tr").children[15].text
-  else
-    return nil
-  end
+  # To many requests to yahoo blocks..
+  parsed = Nokogiri::HTML(open("http://finance.yahoo.com/q/pr?s=#{ticker}"))
+  field  = parsed.xpath("//table/tr").children[15]
+
+  return field.text if field != nil
+  return "Industry not availibile"
 end
 
 # Level 4 =====================================================================
