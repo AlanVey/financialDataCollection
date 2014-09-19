@@ -15,22 +15,22 @@ def extract_data(path)
   calculate_figures(extracted_data)
 end
 
-# TODO: fix errors
 def get_tags_data(tags, data)
   tags_values = Array.new
+
   tags.each do |tag|
     items = data["#{tag}"]
     values = Array.new
-    if items != nil
-      items.each do |item| 
+    
+    items.each do |item| 
         #if item.context.id !~ /QTD/
         #  if item.context.id =~ /Q/ 
         #    values << [item.context.id[/\d{4}/], item.value, item.context.id] if item.context.id =~ /Q4/
         #  end
           
-          values << [item.context.id[/\d{4}/], item.value, item.context.id]
+      values << [item.context.id[/20\d{2}/], item.value]
+      puts "context id: #{item.context.id}"
         #end
-      end
     end
     tags_values << [tag, current_and_previous(values)]
   end 
