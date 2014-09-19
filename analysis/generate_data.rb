@@ -75,11 +75,11 @@ def calculate_ratios(path)
   extracted_data    = extract_data(path)
 
   calculated_ratios << liquidity_ratios(extracted_data)
-  calculated_ratios << debt_ratios(extracted_data)
   calculated_ratios << profitability_ratios(extracted_data)
   calculated_ratios << cash_flow_ratios(extracted_data)
   calculated_ratios << operating_performance_ratios(extracted_data)
   calculated_ratios << valuation_ratios(extracted_data)
+  #calculated_ratios << debt_ratios(extracted_data)
 
   calculated_ratios
 end
