@@ -1,22 +1,17 @@
-require 'yahoo_finance_scraper'
+require 'stock_quote'
 
 def valuation_ratios(data, path)
   valuation_data = Array.new(5, 0)
 
-  ticker = get_ticker(path)
-  comp   = YahooFinance::Scraper::Company.new(ticker).details
+  ticker = path[/[a-z]+-/]
+  ticker = ticker[0..ticker.length - 2]
+  comp   = StockQuote::Stock.quote(ticker)
   
-  valuation_data[0] = comp[:earnings_per_share]
-  valuation_data[1] = comp[:price_to_sales]
-  valuation_data[2] = comp[:price_to_book]
-  valuation_data[3] = comp[:price_to_earnings]
-  valuation_data[4] = comp[:peg_ratio]
+  valuation_data[0] = comp.eps_estimate_current_year
+  valuation_data[1] = comp.price_sales
+  valuation_data[2] = comp.price_book
+  valuation_data[3] = comp.pe_ratio
+  valuation_data[4] = comp.peg_ratio
 
   valuation_data
 end
-
-def get_ticker(path)
-  tmp = path[/[a-z]+-/]
-  tmp[0..tmp.length - 2]
-end
-

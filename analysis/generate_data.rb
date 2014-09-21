@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'xbrlware-ruby19'
 require 'open-uri'
+require 'nokogiri'
 
 require_relative 'data_processing/print_data_to_file'
 require_relative 'data_processing/extract_and_format_data'
@@ -23,63 +24,68 @@ end
 def process_data(from)
   all_company_data = Array.new
 
-  get_ciks.each do |cik|
-    all_company_data << [cik, get_industry(cik), process_company_data(cik, from)]
+  get_ciks(from).each do |cik|
+    name_industry = get_name_industry(cik)
+    name          = name_industry[0]
+    industry      = name_industry[1]
+
+    print "Analysing #{name}...\n"
+
+    all_company_data << [cik, name, industry, get_company_data(cik, from)]
   end
 
   all_company_data
 end
 
 # Level 3 =====================================================================
-def process_company_data(cik, from)
+def get_company_data(cik, from)
   annual_data = Array.new
 
   (from..Time.now.year).each do |year|
+    print "  #{year}..."
     annual_data << process_company_annual_data(cik, year)
+    print "Done\n"
   end
 
   annual_data
 end
 
-def get_ciks
+def get_ciks(from)
   ciks = Array.new
-  file = File.open('../download/data/my_ciks.txt', 'r') 
-
-  file.each { |line| ciks << line[/\d+/] }
-
-  file.close
+  Dir["../download/sec/#{from}/*/*"].each do |cik_path|
+    ciks << cik_path[/\d{10}/]
+  end
   ciks
 end
 
-def get_industry(cik)
-  ticker = nil
+def get_name_industry(cik)
+  tkr           = nil
+  name_industry = Array.new
 
   Dir["../download/sec/*/*/#{cik}/*"].each do |path|
     if path =~ /\d+[^_].xml$/
-      ticker = path[/[a-z]+-/]
-      ticker = ticker[0..ticker.length - 2]
-      break
+      tkr = path[/[a-z]+-/]
+      tkr = tkr[0..tkr.length - 2]
     end
   end
 
-  # To many requests to yahoo blocks..
-  parsed = Nokogiri::HTML(open("http://finance.yahoo.com/q/pr?s=#{ticker}"))
-  field  = parsed.xpath("//table/tr").children[15]
+  parsed   = Nokogiri::HTML(open("http://finance.yahoo.com/q/pr?s=#{tkr}"))
+  industry = parsed.xpath("//table/tr").children[15]
+  name     = parsed.xpath("//td/b").first
 
-  return field.text if field != nil
-  return "Industry not availibile"
+  name_industry[0] = name.text     if name != nil
+  name_industry[1] = industry.text if industry != nil
+
+  return name_industry
 end
 
 # Level 4 =====================================================================
 def process_company_annual_data(cik, year)
-  jan         = 1
-  dec         = 1
-
-  (jan..dec).each do |month|
+  (1..12).each do |month|
     month     = month_convert(sprintf('%02d', month))
     data_path = "../download/sec/#{year}/#{month}/#{cik}/"
 
-    Dir[data_path + '*'].each do |file|
+    Dir["#{data_path}*"].each do |file|
       data_path = file if file =~ /\d+[^_].xml$/
     end
     
@@ -87,7 +93,7 @@ def process_company_annual_data(cik, year)
       return [year, month, calculate_ratios(data_path)]
     end
   end
-  return [year, nil, "SEC has no data for this"]
+  [year, nil, "SEC has no data for this"]
 end
 
 # Level 5 =====================================================================
