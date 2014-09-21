@@ -11,3 +11,4 @@ gem 'rubyzip'
 # Required for analyse section
 gem 'xbrlware-ruby19'
 gem 'yahoo_finance_scraper'
+gem 'stock_quote'
