@@ -12,8 +12,7 @@ def extract_data(path)
       end
     end
   end
-  #calculate_figures(extracted_data)
-  extracted_data
+  calculate_figures(extracted_data)
 end
 
 def get_tags_data(tags, data)
@@ -26,7 +25,7 @@ def get_tags_data(tags, data)
     items.each do |item| 
       # TODO: needs work
       #if items.count <= 3 or item.context.entity.segment == nil
-      #  values << [parse_context_id(item.context.id), item.value] 
+        values << [parse_context_id(item.context.id), item.value] 
       #end
     end
     
