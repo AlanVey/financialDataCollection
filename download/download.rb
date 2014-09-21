@@ -1,7 +1,9 @@
-require_relative 'SECdownload.rb'
-require_relative 'SECdownloadAdd.rb'
+require_relative 'sec_download_methods'
+require_relative 'sec_rss_feed'
 
 def download(from)
-  sec_download(from)
-  sec_download_add(from)
+  data = parse_all_rss(from, Time.now.year)
+  
+  sec_download(data[0])
+  sec_download_alt(data[1])
 end
