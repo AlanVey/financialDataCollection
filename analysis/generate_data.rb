@@ -23,7 +23,8 @@ end
 def process_data(from)
   all_company_data = Array.new
 
-  get_ciks.each do |cik|
+  get_ciks(from).each do |cik|
+    print "Analysing #{cik}...\n"
     all_company_data << [cik, get_industry(cik), process_company_data(cik, from)]
   end
 
@@ -35,19 +36,19 @@ def process_company_data(cik, from)
   annual_data = Array.new
 
   (from..Time.now.year).each do |year|
+    print "  #{year}..."
     annual_data << process_company_annual_data(cik, year)
+    print "Done\n"
   end
 
   annual_data
 end
 
-def get_ciks
+def get_ciks(from)
   ciks = Array.new
-  file = File.open('../download/data/my_ciks.txt', 'r') 
-
-  file.each { |line| ciks << line[/\d+/] }
-
-  file.close
+  Dir["../download/sec/#{from}/*/*"].each do |cik_path|
+    ciks << cik_path[/\d{10}/]
+  end
   ciks
 end
 
@@ -62,7 +63,6 @@ def get_industry(cik)
     end
   end
 
-  # To many requests to yahoo blocks..
   parsed = Nokogiri::HTML(open("http://finance.yahoo.com/q/pr?s=#{ticker}"))
   field  = parsed.xpath("//table/tr").children[15]
 
@@ -72,14 +72,11 @@ end
 
 # Level 4 =====================================================================
 def process_company_annual_data(cik, year)
-  jan         = 1
-  dec         = 1
-
-  (jan..dec).each do |month|
+  (1..12).each do |month|
     month     = month_convert(sprintf('%02d', month))
     data_path = "../download/sec/#{year}/#{month}/#{cik}/"
 
-    Dir[data_path + '*'].each do |file|
+    Dir["#{data_path}*"].each do |file|
       data_path = file if file =~ /\d+[^_].xml$/
     end
     
