@@ -68,6 +68,8 @@ def calculate_figures(data)
       end
     end    
   end
+  calculated_figures['fcf'] = [calculated_figures['ocf'][0] - calculated_figures['capex'][0]]
+  calculated_figures['ebit'] = calculated_figures['operating_profit']
   calculated_figures.tap { |unused_data| unused_data.delete('liabilities_equity') }
 end
 
