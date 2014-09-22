@@ -2,7 +2,7 @@ def liquidity_ratios(data)
   liquidity_data = Array.new(2, 0)
 
   if data["current_assets"] != nil and data["current_liabilities"] != nil
-    liquidity_data[0] = data["current_assets"][0].to_f/data["current_liabilities"][0].to_f
+    liquidity_data[0] = data["current_assets"][0]/data["current_liabilities"][0]
   end
 
   if data["inventory"] != nil and data["inventory"] != nil and data["accounts_receivable"] != nil and 

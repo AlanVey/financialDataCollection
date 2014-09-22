@@ -24,17 +24,16 @@ def get_tags_data(tags, data)
 
     items.each do |item| 
       # TODO: needs work
-      #if items.count <= 3 or item.context.entity.segment == nil
+      if items.count <= 3 or item.context.entity.segment == nil
         values << [parse_context_id(item.context.id), item.value] 
-      #end
+        print values if tag == "GROSSPROFIT"
+      end
     end
-    
     tags_values << [tag, current_and_previous(values)]
   end 
   tags_values
 end
 
-# TODO: perform calculations and return in format used by ratios
 def calculate_figures(data)
   calculated_figures = Hash.new
   data.each do |key, val|
