@@ -26,9 +26,11 @@ def get_tags_data(tags, data)
       # TODO: needs work
       if items.count <= 3 or item.context.entity.segment == nil
         values << [parse_context_id(item.context.id), item.value] 
-        print values if tag == "GROSSPROFIT"
+      elsif item.context.id =~ /YTD/ or item.context.id =~ /Q4/
+        values << [parse_context_id(item.context.id), item.value] 
       end
     end
+
     tags_values << [tag, current_and_previous(values)]
   end 
   tags_values
