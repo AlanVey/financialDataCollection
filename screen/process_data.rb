@@ -2,9 +2,31 @@ def manipulate_data_structure(old_structure)
   new_structure = Array.new
 
   old_structure.each do |c|
-    new_structure << [c[0], c[1], c[2], manipulate_annuals(c[4])]
+    new_structure << [c[0], c[1], c[2], manipulate_annuals(c[3])]
   end
-  new_structure
+
+  remove_useless_data(new_structure)
+end
+
+def remove_useless_data(data)
+  comp  = Array.new
+  valuation = ["price_to_sales", "PEG", "EBITDA"]
+
+  data.each do |company|
+    empty = Array.new
+    company[3].each do |ratio_hash|
+      ratio_hash.each do |key, value|
+        if value.empty? and (not valuation.include?(key))
+          empty << value
+        end
+      end
+    end
+    comp << company if empty.length == 14
+  end
+
+  data = data - comp
+  data.delete_if {|comp| comp[2] == nil }
+  data
 end
 
 def manipulate_annuals(annual_data)
@@ -85,18 +107,18 @@ end
 def create_year_value_pairing(annual_data, group_index, ratio_index)
   pairing = Array.new
   annual_data.each do |year|
-    pairing << [year[0], year[2][group_index][ratio_index]]
+    pairing << [year[0], year[2][group_index][ratio_index]] if year[1] != nil
   end
   pairing
 end
 
 def rank_valuation_ratios(data)
-	ranked_comps = { 'price_to_sales' => [], 'PEG' => [], 'EBITDA' => [] }
-	data.collect do |comp|
+	ranked_comps = Hash.new
+	data.each do |comp|
 		comp_info = [comp[0], comp[1], comp[2]]
-		ranked_comps['price_to_sales'] 	 << (comp_info << comp[3][4]['price_to_sales'][0][1])
-		ranked_comps['PEG'] 	 					 << (comp_info << comp[3][4]['PEG'][0][1])
-		ranked_comps['EBITDA'] 					 << (comp_info << comp[3][4]['EBITDA'][0][1])
+		ranked_comps['price_to_sales'] = (comp_info << comp[3][5]['price_to_sales'][1])
+		ranked_comps['PEG'] 	 			   = (comp_info << comp[3][5]['PEG'][1])
+		ranked_comps['EBITDA'] 				 = (comp_info << comp[3][5]['EBITDA'][1])
 	end
 
 	ranked_comps.each do |ratio, comps|
