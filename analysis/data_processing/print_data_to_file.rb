@@ -25,7 +25,7 @@ def generate_historical_ratios(processed_data)
   processed_data.each do |company|
     company[3].each do |year|
       if year[2].class.to_s == "Array"
-        File.open("analysed_data/#{company[2]} (#{company[0]}).csv", 'w') do |file|
+        File.open("analysed_data/#{company[1]} (#{company[0]}).csv", 'w') do |file|
           file.write "Year, GP, OP, NP\n"
           file.write "#{year[0]},"
           year[2].each do |ratio_group|

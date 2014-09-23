@@ -2,6 +2,7 @@ require 'rss'
 require 'nokogiri'
 require 'fileutils'
 require 'tempfile'
+require 'open-uri'
 
 def parse_all_rss(from, to)
   download_info     = Array.new
@@ -84,9 +85,21 @@ def filter_feed_alt(feed, ciks)
 end
 
 # Util Methods ================================================================
-def get_ciks
-  ciks = Array.new
-  File.open('data/my_ciks.txt').each { |line| ciks << line[/\d{10}/] }
+def get_ciks(path)
+  tickers = Array.new
+  ciks    = Array.new
+
+  File.open(path, 'r').each { |line| tickers << line }
+
+  print "Retrieving CIKS..."
+  tickers.each do |ticker|
+    url    = "http://www.sec.gov/cgi-bin/browse-edgar?CIK={#{ticker}}&Find=Search&owner=exclude&action=getcompany"
+    url    = URI.parse(URI.encode(url.strip))
+    parsed = Nokogiri::HTML(open(url)).xpath('//span/a')
+
+    ciks << parsed.text[/\d{10}/] if parsed.length != 0
+  end
+  puts "Done"
   ciks
 end
 
