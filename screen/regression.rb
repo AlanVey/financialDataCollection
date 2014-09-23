@@ -6,14 +6,14 @@ def regression_for_ratios(data)
 	data.each do |company|
 		company[3].each do |ratio_hash|
 			ratio_hash.each do |key, value|
-				new_data[key] = find_best_fit(value)
+				new_data[key] = find_function(value)
 			end
 		end
 	end
   new_data
 end
 
-def find_best_fit(ratio)
+def find_function(ratio)
 	x = Array.new
 	y = Array.new
 
