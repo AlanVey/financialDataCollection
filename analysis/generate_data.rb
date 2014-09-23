@@ -106,7 +106,7 @@ def calculate_ratios(path)
   calculated_ratios << cash_flow_ratios(extracted_data)
   calculated_ratios << operating_performance_ratios(extracted_data)
   calculated_ratios << valuation_ratios(extracted_data, path)
-  #calculated_ratios << debt_ratios(extracted_data)
+  calculated_ratios << debt_ratios(extracted_data)
 
   calculated_ratios
 end
