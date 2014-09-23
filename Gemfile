@@ -11,3 +11,5 @@ gem 'rubyzip'
 # Required for analyse section
 gem 'xbrlware-ruby19'
 gem 'stock_quote'
+
+gem 'matrix'
