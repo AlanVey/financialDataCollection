@@ -1,17 +1,19 @@
 require 'matrix'
 
 def regression_for_ratios(data)
+  new_data = Hash.new
 
 	data.each do |company|
 		company[3].each do |ratio_hash|
-			ratio_hash.map do |key, value|
-				find_best_fit(key, value)
+			ratio_hash.each do |key, value|
+				new_data[key] = find_function(value)
 			end
 		end
 	end
+  new_data
 end
 
-def find_best_fit(key, ratio)
+def find_function(ratio)
 	x = Array.new
 	y = Array.new
 
@@ -20,7 +22,9 @@ def find_best_fit(key, ratio)
 		y << r[1]
 	end
 
-	[key, best_fit(x, y)]
+  function = best_fit(x, y)
+
+	[function, derivatives(x, function)]
 end
 
 def best_fit(x, y)
@@ -118,10 +122,3 @@ def derivatives(x, fit)
 		[fit[2], 0]
 	end
 end
-
-
-
-
-
-
-
