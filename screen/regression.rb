@@ -1,9 +1,10 @@
 require 'matrix'
 
 def regression_for_ratios(data)
+
 	data.each do |company|
 		company[3].each do |ratio_hash|
-			ratio_hash.each do |key, value|
+			ratio_hash.map do |key, value|
 				find_best_fit(key, value)
 			end
 		end
@@ -99,3 +100,28 @@ def s_value(observed_y, expected_y)
 	difference = difference.inject { |sum, i| sum + i }
 	Math.sqrt(difference.to_f/observed_y.length)
 end
+
+def derivatives(x, fit)
+	case fit[0]
+
+	when 'exponential'
+		[fit[1] * Math.log(fit[2]) * fit[2]**x.last, fit[1] * (Math.log(fit[2]))**2 * fit[2]**x.last]
+	when 'power'
+		[fit[1] * fit[2] * x.last**(fit[2] - 1), fit[1] * fit[2] * (fit[2] - 1) * x.last**(fit[2] - 2)]
+	when 'log'
+		[fit[2] / x.last.to_f, -(fit[2] / ((x.last**2).to_f)]
+	when 'cubic'
+		[fit[2] + 2 * fit[3] * x.last + 3 * fit[4] * x.last**2, 2 * fit[3] + 6 * fit[4] * x.last]
+	when 'quadratic'
+		[fit[2] + 2 * fit[3] * x.last, 2 * fit[3]]
+	when 'linear'
+		[fit[2], 0]
+	end
+end
+
+
+
+
+
+
+
