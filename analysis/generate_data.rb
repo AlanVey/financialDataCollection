@@ -65,7 +65,9 @@ def get_name_industry(cik)
   Dir["../download/sec/*/*/#{cik}/*"].each do |path|
     if path =~ /\d+[^_].xml$/
       tkr = path[/[a-z]+-/]
-      tkr = tkr[0..tkr.length - 2]
+      next if tkr == nil
+      tkr = tkr[0..(tkr.length - 2)]
+      break 
     end
   end
 
@@ -93,7 +95,7 @@ def process_company_annual_data(cik, year)
       return [year, month, calculate_ratios(data_path)]
     end
   end
-  [year, nil, "SEC has no data for this"]
+  [year, nil, nil]
 end
 
 # Level 5 =====================================================================
