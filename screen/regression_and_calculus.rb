@@ -30,7 +30,30 @@ def find_function(ratio)
 
   function = best_fit(x, y)
 
-	[function, derivatives(x, function)]
+	[volatile?(x, y, function), derivatives(x, function)]
+end
+
+def volatile?(x, y, function)
+	two_s = 2 * function.last
+	y_exp = nil
+
+	case function[0]
+	when 'exponential'
+		y_exp = x.map { |xi| function[1] * function[2]**xi }
+	when 'power'
+		y_exp = x.map { |xi| function[1] * xi**function[2] }
+	when 'log'
+		y_exp = x.map { |xi| function[1] + function[2] * Math.log(xi) }
+	when 'cubic'
+		y_exp = x.map { |xi| function[1] + function[2] * xi + function[3] * xi**2 + function[4] * xi**3 }
+	when 'quadratic'
+		y_exp = x.map { |xi| function[1] + function[2] * xi + function[3] * xi**2 }
+	when 'linear'
+		y_exp = x.map { |xi| function[1] + function[2] * xi }
+	end
+
+	s_diffs = (Matrix[y_exp] - Matrix[y]).map { |y_dif| y_dif.abs - two_s }
+	function.last = s_diffs.any? { |s_diff| s_diff < 0 }
 end
 
 def best_fit(x, y)

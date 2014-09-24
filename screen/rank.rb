@@ -1,4 +1,4 @@
-def get_rank(companies)
+def get_valuation_rank(companies)
 	ratio_ranks = rank_valuation_ratios(companies)
 
 	companies.each do |cik, _, _, ratios|
