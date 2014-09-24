@@ -1,17 +1,23 @@
 require 'matrix'
 
-def regression_for_ratios(data)
-  new_data = Hash.new
+def regression_for_ratios(old_ratios)
+  new_ratios = Array.new
+	(0..(old_ratios.length - 2)).each do |i|
+    new_ratio = Hash.new
 
-	data.each do |company|
-		company[3].each do |ratio_hash|
-			ratio_hash.each do |key, value|
-				new_data[key] = find_function(value)
-			end
+		old_ratios[i].each do |key, value|
+			new_ratio[key] = find_function(value)
 		end
+      
+    new_ratios << new_ratio
 	end
-  new_data
+  new_ratios << old_ratios[old_ratios.length - 1] 
+  new_ratios
 end
+
+# =============================================================================
+# Internal 'private' methods ==================================================
+# =============================================================================
 
 def find_function(ratio)
 	x = Array.new
@@ -107,13 +113,12 @@ end
 
 def derivatives(x, fit)
 	case fit[0]
-
 	when 'exponential'
 		[fit[1] * Math.log(fit[2]) * fit[2]**x.last, fit[1] * (Math.log(fit[2]))**2 * fit[2]**x.last]
 	when 'power'
 		[fit[1] * fit[2] * x.last**(fit[2] - 1), fit[1] * fit[2] * (fit[2] - 1) * x.last**(fit[2] - 2)]
 	when 'log'
-		[fit[2] / x.last.to_f, -(fit[2] / ((x.last**2).to_f)]
+		[fit[2] / x.last.to_f, - (fit[2] / ((x.last**2).to_f))]
 	when 'cubic'
 		[fit[2] + 2 * fit[3] * x.last + 3 * fit[4] * x.last**2, 2 * fit[3] + 6 * fit[4] * x.last]
 	when 'quadratic'

@@ -8,6 +8,22 @@ def manipulate_data_structure(old_structure)
   remove_useless_data(new_structure)
 end
 
+def sort_companies_by_industry(companies)
+  industries = Hash.new
+
+  companies.each do |company|
+    industry = company[2]
+
+    industries[industry] = Array.new if industries[industry] == nil 
+    industries[industry] << company
+  end
+  industries
+end
+
+# =============================================================================
+# Internal 'private' methods ==================================================
+# =============================================================================
+
 def remove_useless_data(data)
   comp  = Array.new
   valuation = ["price_to_sales", "PEG", "EBITDA"]
@@ -25,7 +41,7 @@ def remove_useless_data(data)
   end
 
   data = data - comp
-  data.delete_if {|comp| comp[2] == nil }
+  data.delete_if { |comp| comp[2] == nil }
   data
 end
 
@@ -101,34 +117,4 @@ def generate_valuation_hash(annual_data)
   hash["EBITDA"]         = [year[0], year[2][5][5]]
 
   hash
-end
-
-# past --> present for years
-def create_year_value_pairing(annual_data, group_index, ratio_index)
-  pairing = Array.new
-  annual_data.each do |year|
-    pairing << [year[0], year[2][group_index][ratio_index]] if year[1] != nil
-  end
-  pairing
-end
-
-def rank_valuation_ratios(data)
-	ranked_comps = { 'price_to_sales' => [], 'PEG' => [], 'EBITDA' => [] }
-	data.each do |comp|
-    comp_info                      = [comp[0], comp[1], comp[2]]
-		ranked_comps['price_to_sales'] << (comp_info + [comp[3][5]['price_to_sales'][1]])
-		ranked_comps['PEG'] 	 			   << (comp_info + [comp[3][5]['PEG'][1]])
-		ranked_comps['EBITDA'] 				 << (comp_info + [comp[3][5]['EBITDA'][1]])
-	end
-
-	ranked_comps.each do |ratio, companies|
-    if ratio != 'PEG'
-		  ranked_comps[ratio] = companies.sort_by { |c| c[3] }
-    else
-      companies = companies.sort_by { |c| c[3] }
-      ranked_comps[ratio] = companies.reverse
-    end
-	end
-
-  ranked_comps
 end

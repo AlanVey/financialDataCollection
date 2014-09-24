@@ -1,5 +1,3 @@
-
-
 def rank_valuation_ratios(data)
 	ranked_comps = { 'price_to_sales' => [], 'PEG' => [], 'EBITDA' => [] }
 	data.each do |comp|
