@@ -14,6 +14,10 @@ def get_rank(companies)
 	companies
 end
 
+# =============================================================================
+# Internal 'private' methods ==================================================
+# =============================================================================
+
 def rank_valuation_ratios(companies)
 	ranked_comps = { 'price_to_sales' => [], 'PEG' => [], 'EBITDA' => [] }
 	companies.each do |comp|

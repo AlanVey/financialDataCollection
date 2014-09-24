@@ -8,6 +8,22 @@ def manipulate_data_structure(old_structure)
   remove_useless_data(new_structure)
 end
 
+def sort_companies_by_industry(companies)
+  industries = Hash.new
+
+  companies.each do |company|
+    industry = company[2]
+
+    industries[industry] = Array.new if industries[industry] == nil 
+    industries[industry] << company
+  end
+  industries
+end
+
+# =============================================================================
+# Internal 'private' methods ==================================================
+# =============================================================================
+
 def remove_useless_data(data)
   comp  = Array.new
   valuation = ["price_to_sales", "PEG", "EBITDA"]
@@ -25,7 +41,7 @@ def remove_useless_data(data)
   end
 
   data = data - comp
-  data.delete_if {|comp| comp[2] == nil }
+  data.delete_if { |comp| comp[2] == nil }
   data
 end
 
@@ -102,6 +118,7 @@ def generate_valuation_hash(annual_data)
 
   hash
 end
+<<<<<<< HEAD
 
 # past --> present for years
 def create_year_value_pairing(annual_data, group_index, ratio_index)
@@ -111,3 +128,5 @@ def create_year_value_pairing(annual_data, group_index, ratio_index)
   end
   pairing
 end
+=======
+>>>>>>> aa2d310141672b242a9821e86a5628f96f021df3
